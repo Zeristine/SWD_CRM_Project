@@ -20,8 +20,11 @@ public class TabNavigationActivity extends TabActivity {
 
         tabHost = getTabHost();
 
-        addCustomTab("Home", R.drawable.icons_home_config, new Intent(TabNavigationActivity.this, HomeActivity.class));
-        addCustomTab("Account", R.drawable.icons_account_config, new Intent(TabNavigationActivity.this, AccountActivity.class));
+        addCustomTab("Home", R.drawable.icons_home_config, new Intent(this, HomeActivity.class));
+        addCustomTab("Point", R.drawable.icons_points_config, new Intent(this, PointActivity.class));
+        addCustomTab("Notification", R.drawable.icons_notification_config, new Intent(this, NotificationActivity.class));
+        addCustomTab("Account", R.drawable.icons_account_config, new Intent(this, AccountActivity.class));
+
     }
 
     private void addCustomTab(String label, int drawableId, Intent intent) {

@@ -1,5 +1,7 @@
 package hieubt.projects.swd_crm_coffee.retrofit;
 
+import java.util.List;
+
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Example;
 import retrofit2.Call;
@@ -11,11 +13,11 @@ public interface BrandApiInterface {
 
     //get all brand
     @GET("read/")
-    Call<Datum> getAllBrand();
+    Call<List<Datum>> getAllBrand();
 
     //for searching brand
     @GET("read/")
-    Call<Datum> searchBrand(@Query("name") String name);
+    Call<List<Datum>> searchBrand(@Query("name") String name);
 
     //get a brand by id
     @GET("read/{id}")

@@ -348,4 +348,14 @@ public class Datum {
         this.rsaPublicKey = rsaPublicKey;
     }
 
+    @Override
+    public String toString() {
+        return "Datum{" +
+                "listStore=" + listStore +
+                ", id=" + id +
+                ", brandName='" + brandName + '\'' +
+                ", description='" + description + '\'' +
+                ", companyName='" + companyName + '\'' +
+                '}';
+    }
 }

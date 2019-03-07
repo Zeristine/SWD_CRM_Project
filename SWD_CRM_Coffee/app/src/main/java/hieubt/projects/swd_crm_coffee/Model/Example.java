@@ -20,7 +20,7 @@ public class Example {
     private String error;
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+    private Datum data = null;
 
     public Integer getResultCode() {
         return resultCode;
@@ -54,12 +54,22 @@ public class Example {
         this.error = error;
     }
 
-    public List<Datum> getData() {
+    public Datum getData() {
         return data;
     }
 
-    public void setData(List<Datum> data) {
+    public void setData(Datum data) {
         this.data = data;
     }
 
+    @Override
+    public String toString() {
+        return "Example{" +
+                "resultCode=" + resultCode +
+                ", message='" + message + '\'' +
+                ", success=" + success +
+                ", error='" + error + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

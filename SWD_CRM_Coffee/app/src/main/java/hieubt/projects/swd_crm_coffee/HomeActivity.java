@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,11 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
         layoutHome = findViewById(R.id.layoutHome);
-
-        createBrands("The Coffee House");
-        createBrands("StarBuck");
-        createBrands("Quang Trung Coffee");
+//
+//        createBrands("The Coffee House");
+//        createBrands("StarBuck");
+//        createBrands("Quang Trung Coffee");
 
         //////////////////////////////////////////
         //show all registed brand
@@ -42,12 +42,15 @@ public class HomeActivity extends AppCompatActivity {
         final List<Datum> listRegistedBrand = new ArrayList<>();
         BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
         for (Integer id : listBrandId) {
+            Toast.makeText(this, "Begin", Toast.LENGTH_SHORT).show();
             Call<Example> call = service.getBrandById(id);
             call.enqueue(new Callback<Example>() {
                 @Override
                 public void onResponse(Call<Example> call, Response<Example> response) {
                     Datum data = response.body().getData();
-                    listRegistedBrand.add(data);
+                    //listRegistedBrand.add(data);
+                    createBrands(data.getBrandName());
+                    Toast.makeText(HomeActivity.this, "A brand is created", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -56,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
+        setContentView(R.layout.activity_home);
     }
 
     private void createBrands(String label){

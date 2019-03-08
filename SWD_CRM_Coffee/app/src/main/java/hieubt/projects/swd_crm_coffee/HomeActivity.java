@@ -16,6 +16,7 @@ import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Example;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
+import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,15 +24,16 @@ import retrofit2.Response;
 public class HomeActivity extends AppCompatActivity {
 
     private LinearLayout layoutHome;
+    private final ItemGenerator itemGenerator = new ItemGenerator(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutHome = findViewById(R.id.layoutHome);
-//
-//        createBrands("The Coffee House");
-//        createBrands("StarBuck");
-//        createBrands("Quang Trung Coffee");
+
+        itemGenerator.createRectangleWithLabel("The Coffee House", layoutHome);
+        itemGenerator.createRectangleWithLabel("StarBuck", layoutHome);
+        itemGenerator.createRectangleWithLabel("Quang Trung Coffee", layoutHome);
 
         //////////////////////////////////////////
         //show all registed brand
@@ -49,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
                 public void onResponse(Call<Example> call, Response<Example> response) {
                     Datum data = response.body().getData();
                     //listRegistedBrand.add(data);
-                    createBrands(data.getBrandName());
+                    itemGenerator.createRectangleWithLabel(data.getBrandName(), layoutHome);
                     Toast.makeText(HomeActivity.this, "A brand is created", Toast.LENGTH_SHORT).show();
                 }
 
@@ -60,30 +62,5 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
         setContentView(R.layout.activity_home);
-    }
-
-    private void createBrands(String label){
-        TextView textView = new TextView(this);
-
-        GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{
-                        getResources().getColor(R.color.blueLight100),
-                        getResources().getColor(R.color.blueLight200),
-                        getResources().getColor(R.color.blueLight300)
-                });
-        gd.setCornerRadius(15f);
-        textView.setBackgroundDrawable(gd);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 160);
-        layoutParams.leftMargin = 10;
-        layoutParams.rightMargin = 10;
-        layoutParams.topMargin = 5;
-        layoutParams.bottomMargin = 5;
-        textView.setLayoutParams(layoutParams);
-
-        textView.setText(label);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        layoutHome.addView(textView);
     }
 }

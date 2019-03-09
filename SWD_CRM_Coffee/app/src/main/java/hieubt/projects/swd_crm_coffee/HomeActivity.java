@@ -36,8 +36,8 @@ public class HomeActivity extends AppCompatActivity {
         //////////////////////////////////////////
         //show all registed brand
         //get list registed brand
-        DBManager dbManager = new DBManager(this);
-        List<Integer> listBrandId = dbManager.getAllRegistedBrandId(1);
+        DBManager db = new DBManager(this);
+        List<Integer> listBrandId = db.getAllRegistedBrandId(1);
         //call api with each brand id
         final List<Datum> listRegistedBrand = new ArrayList<>();
         BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
@@ -56,6 +56,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     private void createBrands(String label){

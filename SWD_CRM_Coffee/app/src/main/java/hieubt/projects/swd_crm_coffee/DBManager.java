@@ -30,6 +30,7 @@ public class DBManager extends SQLiteOpenHelper {
                 "\t\"password\"\tINTEGER NOT NULL\n" +
                 ")";
         db.execSQL(sqlQuery);
+
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

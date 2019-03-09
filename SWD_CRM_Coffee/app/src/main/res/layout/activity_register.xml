@@ -4,30 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".RegisterActivity"
+    android:orientation="vertical">
 
     <EditText
-        android:id="@+id/txtUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:gravity="center"/>
+        android:hint="Enter username"
+        android:id="@+id/txtUsername"/>
     <EditText
-        android:id="@+id/txtPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:gravity="center"/>
+        android:hint="Enter password"
+        android:id="@+id/txtPassword"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:onClick="clickToNavigate"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="register"
-        android:onClick="clickToRegister"/>
+        android:text="Register"
+        android:onClick="clickToRegis"/>
 
 </LinearLayout>

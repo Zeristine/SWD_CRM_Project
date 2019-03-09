@@ -21,6 +21,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hieubt.projects.swd_crm_coffee.HomeActivity" />
         </activity>
+        <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".PointActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".AccountActivity" />

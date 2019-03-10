@@ -13,6 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".VoucherActivity"
+            android:label="@string/title_activity_voucher"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="hieubt.projects.swd_crm_coffee.HomeActivity" />
+        </activity>
+        <activity
             android:name=".MemberStatusActivity"
             android:label="@string/title_activity_member_status"
             android:parentActivityName=".HomeActivity"

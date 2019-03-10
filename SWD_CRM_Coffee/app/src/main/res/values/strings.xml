@@ -2,4 +2,5 @@
     <string name="app_name">SWD_CRM_Coffee</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_member_status">MemberStatusActivity</string>
+    <string name="title_activity_voucher">VoucherActivity</string>
 </resources>

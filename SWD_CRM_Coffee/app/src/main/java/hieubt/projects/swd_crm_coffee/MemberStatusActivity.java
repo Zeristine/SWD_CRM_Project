@@ -10,6 +10,10 @@ import android.view.View;
 import java.util.List;
 
 import hieubt.projects.swd_crm_coffee.Model.Datum;
+import hieubt.projects.swd_crm_coffee.Model.Promotion;
+import hieubt.projects.swd_crm_coffee.Model.PromotionResponse;
+import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import retrofit2.Call;
@@ -39,8 +43,8 @@ public class MemberStatusActivity extends AppCompatActivity {
         //get extra brand's name from HomeActivity
         String brandName = "UniSpace";
         //get brand info
-        BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
-        Call<List<Datum>> call =  service.searchBrand(brandName);
+        BrandApiInterface brandService = BrandApiClient.getClient().create(BrandApiInterface.class);
+        Call<List<Datum>> call =  brandService.searchBrand(brandName);
         call.enqueue(new Callback<List<Datum>>() {
             @Override
             public void onResponse(Call<List<Datum>> call, Response<List<Datum>> response) {
@@ -54,7 +58,21 @@ public class MemberStatusActivity extends AppCompatActivity {
                 System.out.println("FAIL");
             }
         });
+        //get brand promotion
+        BigApiInterface bigService = BigApiClient.getClient().create(BigApiInterface.class);
+        Call<PromotionResponse> call1 =  bigService.getAllPromotion();
+        call1.enqueue(new Callback<PromotionResponse>() {
+            @Override
+            public void onResponse(Call<PromotionResponse> call, Response<PromotionResponse> response) {
+                //this is the list of promotion
+                List<Promotion> list = response.body().getData();
+            }
 
+            @Override
+            public void onFailure(Call<PromotionResponse> call, Throwable t) {
+                System.out.println("FAIL");
+            }
+        });
     }
 
 }

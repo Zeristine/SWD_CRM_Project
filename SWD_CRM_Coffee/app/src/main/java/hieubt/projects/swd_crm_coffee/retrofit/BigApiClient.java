@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BigApiClient {
-    public static final String BASE_URL = "http://202.78.227.93:7777/api/";
+    public static final String BASE_URL = "http://apipromo.unicode.edu.vn/api/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {

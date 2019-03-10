@@ -13,6 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".MemberStatusActivity"
+            android:label="@string/title_activity_member_status"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="hieubt.projects.swd_crm_coffee.HomeActivity" />
+        </activity>
+        <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:parentActivityName=".HomeActivity"
@@ -21,7 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hieubt.projects.swd_crm_coffee.HomeActivity" />
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".PointActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".AccountActivity" />

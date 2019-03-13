@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.Datum;
+
 public class DBManager extends SQLiteOpenHelper {
 
     private Context mContext;
@@ -77,6 +79,22 @@ public class DBManager extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return list;
+    }
+
+    //get Brand
+    public boolean checkUserRegisterBrand(int userId, int brandId){
+        boolean result = false;
+        String query = "SELECT brandId " +
+                "FROM user_table JOIN registedBrand_table on user_table.id = registedBrand_table.userId " +
+                "WHERE user_table.id = " + String.valueOf(userId) + " AND registedBrand_table.brandId = " + String.valueOf(brandId);
+        SQLiteDatabase db =  this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()){
+            result = true;
+        }
+        cursor.close();
+        db.close();
+        return result;
     }
 
     //regist a brand

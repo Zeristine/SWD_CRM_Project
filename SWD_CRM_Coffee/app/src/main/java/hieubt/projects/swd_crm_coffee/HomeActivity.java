@@ -29,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
         layoutHome = findViewById(R.id.layoutHome);
 
         itemGenerator.createRectangleWithLabel("The Coffee House", layoutHome);
@@ -61,6 +62,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
-        setContentView(R.layout.activity_home);
+
     }
 }

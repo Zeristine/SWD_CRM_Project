@@ -21,7 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
         
         DBManager db = new DBManager(this);
         try{
-            if(db.registed(txtUsername.toString(),txtPassword.toString())){
+            if(db.registed(txtUsername.getText().toString(),txtPassword.getText().toString())){
                 Toast.makeText(this, "You've registered", Toast.LENGTH_SHORT).show();
                 finish();
             }else{

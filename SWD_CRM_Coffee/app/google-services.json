@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1038977145733",
+    "firebase_url": "https://swdcrmcoffee.firebaseio.com",
+    "project_id": "swdcrmcoffee",
+    "storage_bucket": "swdcrmcoffee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038977145733:android:5eb19fdf7787d7b9",
+        "android_client_info": {
+          "package_name": "hieubt.projects.swd_crm_coffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038977145733-23kfknbn48s7d9gbfmerunk7pkus8vba.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hieubt.projects.swd_crm_coffee",
+            "certificate_hash": "99c7422c0eb72f6bd812dc7ae398f4662f44ab02"
+          }
+        },
+        {
+          "client_id": "1038977145733-duksf50vghrnj8i16m2s80gnk2b2kd3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4eJs8FOyxPQ8bXi_ZhYNNwykJOWZd_7s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038977145733-duksf50vghrnj8i16m2s80gnk2b2kd3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -24,6 +24,7 @@ public class TabNavigationActivity extends TabActivity {
         addCustomTab("Point", R.drawable.icons_points_config, new Intent(this, PointActivity.class));
         addCustomTab("Notification", R.drawable.icons_notification_config, new Intent(this, NotificationActivity.class));
         addCustomTab("Account", R.drawable.icons_account_config, new Intent(this, AccountActivity.class));
+        addCustomTab("Noti", R.drawable.icons_notification_config, new Intent(this, NotiActivity.class));
 
     }
 

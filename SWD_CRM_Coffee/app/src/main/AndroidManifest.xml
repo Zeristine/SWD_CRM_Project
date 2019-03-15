@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".VoucherDetailActivity"></activity>
+        <activity android:name=".BrandSearchActivity" />
         <service
             android:name=".MyJobService"
             android:enabled="true"
@@ -24,7 +26,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <activity android:name=".BrandSearchActivity"></activity>
         <activity android:name=".BrandDetailActivity" />
         <activity
             android:name=".VoucherActivity"

@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BrandSearchActivity"></activity>
+        <activity android:name=".VoucherDetailActivity"></activity>
+        <activity android:name=".BrandSearchActivity" />
         <activity android:name=".BrandDetailActivity" />
         <activity
             android:name=".VoucherActivity"

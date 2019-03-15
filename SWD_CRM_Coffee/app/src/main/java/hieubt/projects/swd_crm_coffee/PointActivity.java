@@ -1,14 +1,20 @@
 package hieubt.projects.swd_crm_coffee;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class PointActivity extends AppCompatActivity {
 
@@ -16,7 +22,6 @@ public class PointActivity extends AppCompatActivity {
     private Camera camera;
     private SurfaceHolder surfaceHolder;
     private DisplayMetrics displayMetrics;
-    private final int PERMISSION_REQUEST_CAMERA = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,4 +63,5 @@ public class PointActivity extends AppCompatActivity {
             }
         });
     }
+
 }

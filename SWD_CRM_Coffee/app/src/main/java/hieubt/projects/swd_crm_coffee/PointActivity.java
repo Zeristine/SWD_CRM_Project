@@ -16,6 +16,7 @@ public class PointActivity extends AppCompatActivity {
     private Camera camera;
     private SurfaceHolder surfaceHolder;
     private DisplayMetrics displayMetrics;
+    private final int PERMISSION_REQUEST_CAMERA = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class PointActivity extends AppCompatActivity {
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (displayMetrics.heightPixels*3)/5);
+                (displayMetrics.heightPixels * 3) / 5);
         layoutParams.leftMargin = 20;
         layoutParams.rightMargin = 20;
         surfaceView.setLayoutParams(layoutParams);

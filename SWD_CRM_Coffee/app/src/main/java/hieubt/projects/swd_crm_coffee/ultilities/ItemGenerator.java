@@ -2,6 +2,7 @@ package hieubt.projects.swd_crm_coffee.ultilities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -28,14 +29,7 @@ public class ItemGenerator {
     public void createRectangleWithLabel(final String label, final int brandId, final int userId, LinearLayout layout) {
         TextView textView = new TextView(context);
 
-        GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{
-                        context.getResources().getColor(R.color.blueLight100),
-                        context.getResources().getColor(R.color.blueLight200),
-                        context.getResources().getColor(R.color.blueLight300)
-                });
-        gd.setCornerRadius(15f);
-        textView.setBackgroundDrawable(gd);
+        textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
                 , 200);
@@ -113,7 +107,18 @@ public class ItemGenerator {
         textView.setGravity(Gravity.CENTER);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         textView.setTextColor(context.getResources().getColor(R.color.black));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+
+        textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
+                , 200);
+        layoutParams.leftMargin = 10;
+        layoutParams.rightMargin = 10;
+        layoutParams.topMargin = 5;
+        layoutParams.bottomMargin = 5;
+        textView.setLayoutParams(layoutParams);
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

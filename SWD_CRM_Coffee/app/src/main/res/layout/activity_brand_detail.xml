@@ -8,13 +8,22 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50sp">
+        android:paddingTop="50sp">
 
         <LinearLayout
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/blueLight200"
+                android:gravity="center"
+                android:text="INFORMATION"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,7 +62,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/blueLight300"
+                android:background="@color/blueLight200"
                 android:gravity="center"
                 android:text="ADDRESS"
                 android:textColor="@color/black"
@@ -71,7 +80,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/blueLight300"
+                android:background="@color/blueLight200"
                 android:gravity="center"
                 android:text="PROMOTIONS"
                 android:textColor="@color/black"

@@ -1,10 +1,16 @@
 package hieubt.projects.swd_crm_coffee;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -38,4 +44,47 @@ public class TabNavigationActivity extends TabActivity {
         tab.setContent(intent);
         tabHost.addTab(tab);
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Are you sure to log out?");
+//        builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                TabNavigationActivity.super.onBackPressed();
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                //Do Nothing
+//            }
+//        });
+//        builder.show();
+//    }
+//
+//    private void showDialog() {
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setTitle("Back to Login Screen!");
+//        dialog.setContentView(R.layout.layout_dialog);
+//        Button btnLogout = dialog.findViewById(R.id.btnYes);
+//        Button btnCancel = dialog.findViewById(R.id.btnNo);
+//        btnLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//                finish();
+//            }
+//        });
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.show();
+//    }
+
 }

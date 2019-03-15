@@ -22,11 +22,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickToNavigate(View view) {
-
         DBManager db = new DBManager(this);
         try {
             if (db.checkLogin(txtUsername.getText().toString(), txtPassword.getText().toString())) {
-                Toast.makeText(this, "You've logged in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Welcome, " + txtUsername.getText().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, TabNavigationActivity.class);
                 startActivity(intent);
             } else {

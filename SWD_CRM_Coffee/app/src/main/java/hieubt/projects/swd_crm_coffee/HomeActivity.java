@@ -5,6 +5,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,36 +26,47 @@ import retrofit2.Response;
 public class HomeActivity extends AppCompatActivity {
 
     private LinearLayout layoutHome;
-    private final ItemGenerator itemGenerator = new ItemGenerator(this);
+    private ImageButton btnSearch;
+    private final ItemGenerator itemGenerator = new ItemGenerator(HomeActivity.this);
+    private final DBManager db = new DBManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         layoutHome = findViewById(R.id.layoutHome);
+        btnSearch = findViewById(R.id.btnSearch);
 
-        itemGenerator.createRectangleWithLabel("The Coffee House", layoutHome);
-        itemGenerator.createRectangleWithLabel("StarBuck", layoutHome);
-        itemGenerator.createRectangleWithLabel("Quang Trung Coffee", layoutHome);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, BrandSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getListOfRegisteredBrand();
+    }
+
+    private void getListOfRegisteredBrand(){
         //////////////////////////////////////////
         //show all registed brand
         //get list registed brand
-        DBManager db = new DBManager(this);
+        layoutHome.removeAllViews();
         List<Integer> listBrandId = db.getAllRegistedBrandId(1);
         //call api with each brand id
-        final List<Datum> listRegistedBrand = new ArrayList<>();
         BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
         for (Integer id : listBrandId) {
-            Toast.makeText(this, "Begin", Toast.LENGTH_SHORT).show();
             Call<Example> call = service.getBrandById(id);
             call.enqueue(new Callback<Example>() {
                 @Override
                 public void onResponse(Call<Example> call, Response<Example> response) {
                     Datum data = response.body().getData();
-                    //listRegistedBrand.add(data);
-                    itemGenerator.createRectangleWithLabel(data.getBrandName(), layoutHome);
-                    Toast.makeText(HomeActivity.this, "A brand is created", Toast.LENGTH_SHORT).show();
+                    itemGenerator.createRectangleWithLabel(data.getBrandName(),data.getId(), 1,layoutHome);
                 }
 
                 @Override
@@ -62,6 +75,5 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 }

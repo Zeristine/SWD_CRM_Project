@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import hieubt.projects.swd_crm_coffee.Model.Datum;
-
 public class DBManager extends SQLiteOpenHelper {
 
     private Context mContext;
@@ -30,6 +28,12 @@ public class DBManager extends SQLiteOpenHelper {
                 "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
                 "\t\"username\"\tINTEGER NOT NULL,\n" +
                 "\t\"password\"\tINTEGER NOT NULL\n" +
+                ")";
+        db.execSQL(sqlQuery);
+        sqlQuery = "CREATE TABLE \"noti_table\" (\n" +
+                "\t\"notiID\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"notiTitle\"\tINTEGER NOT NULL,\n" +
+                "\t\"notiBody\"\tINTEGER NOT NULL\n" +
                 ")";
         db.execSQL(sqlQuery);
 
@@ -62,6 +66,34 @@ public class DBManager extends SQLiteOpenHelper {
         boolean result = db.insert("user_table", null, values) > 0;
         db.close();
         return result;
+    }
+
+    public boolean inputNoti(String notiTitle, String notiBody) {
+        ContentValues values = new ContentValues();
+        values.put("notiTitle", notiTitle);
+        values.put("notiBody", notiBody);
+        SQLiteDatabase db = this.getWritableDatabase();
+        boolean result = db.insert("noti_table", null, values) > 0;
+        db.close();
+        return result;
+    }
+
+    public List<NotiDTO> getListNoti() {
+        List<NotiDTO> list = new ArrayList<>();
+        String query = "SELECT notiTitle, notiBody FROM noti_table";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                NotiDTO dto = new NotiDTO();
+                dto.setNotiTitle(cursor.getString(0));
+                dto.setNotiBody(cursor.getString(1));
+                list.add(dto);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
     }
 
     //registedBrand table

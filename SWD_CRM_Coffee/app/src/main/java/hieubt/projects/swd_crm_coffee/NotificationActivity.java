@@ -9,6 +9,8 @@ import android.widget.Gallery;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class NotificationActivity extends AppCompatActivity {
 
     private LinearLayout layoutNoti;
@@ -18,14 +20,11 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
         layoutNoti = findViewById(R.id.layoutNoti);
-
-        createNotification("50% Discount to Coffee House's product");
-        createNotification("50% Discount to StarBuck's product");
-        createNotification("70% Discount to Coffee House's product");
-        createNotification("Event : Halloween at Coffee House");
-        createNotification("Event : Halloween at StarBuck");
-        createNotification("Mr. Coffee's 1st day opening sale");
-        createNotification("50% Discount to Coffee House's product");
+        DBManager db = new DBManager(this);
+        List<NotiDTO> listNoti = db.getListNoti();
+        for(int i = 0; i <listNoti.size();i++){
+            createNotification(listNoti.get(i).getNotiBody());
+        }
     }
 
     private void createNotification(String label){

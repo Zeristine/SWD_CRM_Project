@@ -1,7 +1,8 @@
 package hieubt.projects.swd_crm_coffee;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 public class AccountActivity extends AppCompatActivity {
@@ -13,6 +14,8 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     public void clickToLogout(View view) {
-        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

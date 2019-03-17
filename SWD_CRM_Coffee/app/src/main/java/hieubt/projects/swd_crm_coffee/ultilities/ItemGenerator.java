@@ -130,4 +130,8 @@ public class ItemGenerator {
 
         layout.addView(textView);
     }
+
+    public void createNotification(){
+
+    }
 }

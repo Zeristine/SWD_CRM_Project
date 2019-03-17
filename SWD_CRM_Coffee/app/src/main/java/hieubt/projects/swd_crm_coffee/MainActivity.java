@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Welcome, " + txtUsername.getText().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, TabNavigationActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }

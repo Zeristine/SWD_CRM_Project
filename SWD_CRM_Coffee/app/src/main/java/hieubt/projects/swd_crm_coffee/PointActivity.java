@@ -1,67 +1,120 @@
 package hieubt.projects.swd_crm_coffee;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import java.io.IOException;
 
 public class PointActivity extends AppCompatActivity {
 
-    private SurfaceView surfaceView;
-    private Camera camera;
-    private SurfaceHolder surfaceHolder;
-    private DisplayMetrics displayMetrics;
+    private SurfaceView cameraPreview;
+    private TextView txtResult;
+    private BarcodeDetector barcodeDetector;
+    private CameraSource cameraSource;
+    final int RequestCameraPermissionID = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        surfaceView = findViewById(R.id.surfaceView);
-        surfaceHolder = surfaceView.getHolder();
-        displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (displayMetrics.heightPixels * 3) / 5);
-        layoutParams.leftMargin = 20;
-        layoutParams.rightMargin = 20;
-        surfaceView.setLayoutParams(layoutParams);
-        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+
+        cameraPreview = findViewById(R.id.cameraPreview);
+        txtResult = findViewById(R.id.txtResult);
+
+        barcodeDetector = new BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.QR_CODE)
+                .build();
+        cameraSource = new CameraSource
+                .Builder(this, barcodeDetector)
+                .setRequestedPreviewSize(640, 1500)
+                .build();
+
+        cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                camera = Camera.open();
-                camera.setDisplayOrientation(90);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(PointActivity.this,
+                            new String[]{Manifest.permission.CAMERA}, RequestCameraPermissionID);
+                    return;
+                }
                 try {
-                    camera.setPreviewDisplay(holder);
-                } catch (Exception ex) {
-                    camera.release();
-                    camera = null;
+                    cameraSource.start(cameraPreview.getHolder());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                camera.startPreview();
+
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                camera.stopPreview();
-                camera.release();
-                camera = null;
+                cameraSource.stop();
+            }
+        });
+
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
+                if(qrcodes.size() != 0){
+                    txtResult.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(1000);
+                            txtResult.setText(qrcodes.valueAt(0).displayValue);
+                        }
+                    });
+                }
             }
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case RequestCameraPermissionID: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    try {
+                        cameraSource.start(cameraPreview.getHolder());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 }

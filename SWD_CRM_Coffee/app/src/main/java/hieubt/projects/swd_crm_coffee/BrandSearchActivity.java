@@ -10,9 +10,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.CustomerToPost;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
+import hieubt.projects.swd_crm_coffee.Model.Mes;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +28,7 @@ public class BrandSearchActivity extends AppCompatActivity {
     private LinearLayout mainLayout;
     private final ItemGenerator itemGenerator = new ItemGenerator(this);
     private final BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
+    private CustomerApiInterface customerService = CustomerApiClient.getClient().create(CustomerApiInterface.class);
     private List<Datum> prevSearchList;
 
     @Override
@@ -98,4 +103,23 @@ public class BrandSearchActivity extends AppCompatActivity {
             }
         });
     }
+    //regist by sending customer phone number + brand name
+    private void registBrand(String brandName) {
+        CustomerToPost customer = new CustomerToPost();
+        customer.setBrandCode(brandName);
+        Call<Mes> call = customerService.registNewBrand(customer);
+        call.enqueue(new Callback<Mes>() {
+            @Override
+            public void onResponse(Call<Mes> call, Response<Mes> response) {
+                System.out.println("regist success");
+            }
+
+            @Override
+            public void onFailure(Call<Mes> call, Throwable t) {
+                System.out.println("FAIL");
+            }
+        });
+    }
+
+
 }

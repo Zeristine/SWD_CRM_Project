@@ -14,10 +14,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.Customer;
+import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Example;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,5 +79,23 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    //return registed brand by phone
+    private void getListOfRegisteredBrandByPhonenumber() {
+        CustomerApiInterface service = CustomerApiClient.getClient().create(CustomerApiInterface.class);
+        Call<CustomerResponse> call = service.getRegistedBrand("0938834304"); //set cứng số phone
+        call.enqueue(new Callback<CustomerResponse>() {
+            @Override
+            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
+                //this is the list
+                List<Customer> list = response.body().getData();
+            }
+
+            @Override
+            public void onFailure(Call<CustomerResponse> call, Throwable t) {
+                System.out.println("FAIL");
+            }
+        });
     }
 }

@@ -36,6 +36,10 @@ public class DBManager extends SQLiteOpenHelper {
                 "\t\"notiBody\"\tINTEGER NOT NULL\n" +
                 ")";
         db.execSQL(sqlQuery);
+        sqlQuery = "CREATE TABLE \"phoneNumber_table\" (\n" +
+                "\t\"phoneNumber\"\tTEXT\n" +
+                ")";
+        db.execSQL(sqlQuery);
 
     }
     @Override
@@ -142,4 +146,23 @@ public class DBManager extends SQLiteOpenHelper {
         return result;
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        ContentValues values = new ContentValues();
+        values.put("phoneNumber", phoneNumber);
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.insert("phoneNumber_table", null, values);
+        db.close();
+    }
+
+    public String getPhoneNumber() {
+        String query = "select * from phoneNumber_table";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            String phoneNumber = cursor.getString(0);
+            return phoneNumber;
+        } else {
+            return "";
+        }
+    }
 }

@@ -33,4 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
         
         
     }
+
+    public void clickToRegisByPhone(View view) {
+        EditText txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
+        String phoneNumber = txtPhoneNumber.getText().toString();
+        DBManager db = new DBManager(this);
+        db.setPhoneNumber(phoneNumber);
+    }
 }

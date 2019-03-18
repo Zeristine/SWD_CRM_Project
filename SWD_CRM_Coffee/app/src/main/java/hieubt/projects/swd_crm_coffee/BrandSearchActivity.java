@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.Customer;
+import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
 import hieubt.projects.swd_crm_coffee.Model.CustomerToPost;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
@@ -30,6 +32,7 @@ public class BrandSearchActivity extends AppCompatActivity {
     private final BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
     private CustomerApiInterface customerService = CustomerApiClient.getClient().create(CustomerApiInterface.class);
     private List<Datum> prevSearchList;
+    DBManager db = new DBManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,22 +106,58 @@ public class BrandSearchActivity extends AppCompatActivity {
             }
         });
     }
+
     //regist by sending customer phone number + brand name
-    private void registBrand(String brandName) {
-        CustomerToPost customer = new CustomerToPost();
-        customer.setBrandCode(brandName);
-        Call<Mes> call = customerService.registNewBrand(customer);
-        call.enqueue(new Callback<Mes>() {
+    //check registed or not, then regist a brand
+    public void registBrand(String brandName) {
+        String phoneNumber = db.getPhoneNumber();
+        final CustomerToPost customerToPost = new CustomerToPost();
+        //set phone number and brand name to Post
+        customerToPost.setPhone(phoneNumber);
+        brandName = "CoffeeHouse"; // brand name set tạm
+        customerToPost.setBrandCode(brandName);
+        //get customer from api
+        Call<CustomerResponse> call = customerService.getRegistedBrand(phoneNumber);
+        final String finalBrandName = brandName;
+        call.enqueue(new Callback<CustomerResponse>() {
             @Override
-            public void onResponse(Call<Mes> call, Response<Mes> response) {
-                System.out.println("regist success");
+            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
+                List<Customer> list = response.body().getData();
+                //check registed or not
+                boolean registed = false;
+                for (Customer c : list) {
+                    if (finalBrandName.equals(c.getBrandCode())) {
+                        registed = true;
+                        break;
+                    }
+                }
+                //if registed then out, other wise regist
+                if (registed) {
+                    System.out.println("This brand is registed");
+                } else {
+                    //post to api
+                    Call<Mes> call1 = customerService.registNewBrand(customerToPost);
+                    call1.enqueue(new Callback<Mes>() {
+                        @Override
+                        public void onResponse(Call<Mes> call, Response<Mes> response) {
+                            System.out.println("Regist success");
+                        }
+
+                        @Override
+                        public void onFailure(Call<Mes> call, Throwable t) {
+                            System.out.println("FAIL post");
+                        }
+                    });
+                }
             }
 
             @Override
-            public void onFailure(Call<Mes> call, Throwable t) {
-                System.out.println("FAIL");
+            public void onFailure(Call<CustomerResponse> call, Throwable t) {
+                System.out.println("FAIL get");
             }
         });
+
+
     }
 
 

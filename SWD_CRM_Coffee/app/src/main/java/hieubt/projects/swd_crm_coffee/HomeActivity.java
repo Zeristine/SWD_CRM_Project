@@ -83,12 +83,14 @@ public class HomeActivity extends AppCompatActivity {
 
     //return registed brand by phone
     private void getListOfRegisteredBrandByPhonenumber() {
+        //get phone number from db
+        String phoneNumber = db.getPhoneNumber();
         CustomerApiInterface service = CustomerApiClient.getClient().create(CustomerApiInterface.class);
-        Call<CustomerResponse> call = service.getRegistedBrand("0938834304"); //set cứng số phone
+        Call<CustomerResponse> call = service.getRegistedBrand(phoneNumber);
         call.enqueue(new Callback<CustomerResponse>() {
             @Override
             public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
-                //this is the list
+                //this is the list, each object contain brand name
                 List<Customer> list = response.body().getData();
             }
 

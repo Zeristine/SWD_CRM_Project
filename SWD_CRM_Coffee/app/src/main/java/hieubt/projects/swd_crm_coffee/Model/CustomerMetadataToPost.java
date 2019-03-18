@@ -3,7 +3,7 @@ package hieubt.projects.swd_crm_coffee.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-class CustomerMetadataToPost {
+public class CustomerMetadataToPost {
     @SerializedName("metadata_key")
     @Expose
     private String metadataKey =  "IsOk";
@@ -12,7 +12,7 @@ class CustomerMetadataToPost {
     private Boolean active = true;
     @SerializedName("value")
     @Expose
-    private String value = "true";
+    private String value = "0";
 
     public String getMetadataKey() {
         return metadataKey;

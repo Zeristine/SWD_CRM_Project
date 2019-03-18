@@ -3,22 +3,15 @@ package hieubt.projects.swd_crm_coffee;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.PixelFormat;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -29,10 +22,10 @@ import java.io.IOException;
 
 public class PointActivity extends AppCompatActivity {
 
-    private SurfaceView cameraPreview;
-    private TextView txtResult;
-    private BarcodeDetector barcodeDetector;
-    private CameraSource cameraSource;
+    SurfaceView cameraPreview;
+    TextView txtResult;
+    BarcodeDetector barcodeDetector;
+    CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
 
     @Override
@@ -48,7 +41,7 @@ public class PointActivity extends AppCompatActivity {
                 .build();
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(640, 1500)
+                .setRequestedPreviewSize(640, 480)
                 .build();
 
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {

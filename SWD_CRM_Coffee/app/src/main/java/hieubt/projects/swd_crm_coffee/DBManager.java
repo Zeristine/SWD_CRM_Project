@@ -40,6 +40,10 @@ public class DBManager extends SQLiteOpenHelper {
                 "\t\"phoneNumber\"\tTEXT\n" +
                 ")";
         db.execSQL(sqlQuery);
+        sqlQuery = "CREATE TABLE \"customerCode_table\" (\n" +
+                "\t\"customerCode\"\tTEXT\n" +
+                ")";
+        db.execSQL(sqlQuery);
 
     }
     @Override
@@ -165,4 +169,24 @@ public class DBManager extends SQLiteOpenHelper {
             return "";
         }
     }
+    public void setCustomerCode(String customerCode) {
+        ContentValues values = new ContentValues();
+        values.put("customerCode", customerCode);
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.insert("customerCode_table", null, values);
+        db.close();
+    }
+
+    public String getCustomerCode() {
+        String query = "select * from customerCode_table";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            String customerCode = cursor.getString(0);
+            return customerCode;
+        } else {
+            return "";
+        }
+    }
+
 }

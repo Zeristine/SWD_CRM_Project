@@ -18,10 +18,14 @@ import hieubt.projects.swd_crm_coffee.Model.Customer;
 import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Example;
+import hieubt.projects.swd_crm_coffee.Model.Membership;
+import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageButton btnSearch;
     private final ItemGenerator itemGenerator = new ItemGenerator(HomeActivity.this);
     private final DBManager db = new DBManager(this);
+    MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,22 +86,21 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    //return registed brand by phone
+    //get registed brand by customer code
     private void getListOfRegisteredBrandByPhonenumber() {
-        //get phone number from db
-        String phoneNumber = db.getPhoneNumber();
-        CustomerApiInterface service = CustomerApiClient.getClient().create(CustomerApiInterface.class);
-        Call<CustomerResponse> call = service.getRegistedBrand(phoneNumber);
-        call.enqueue(new Callback<CustomerResponse>() {
+        //get customer code
+        String customerCode = db.getCustomerCode();
+        Call<MembershipResponse> call = membershipService.getMemberShipByCode(customerCode);
+        call.enqueue(new Callback<MembershipResponse>() {
             @Override
-            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
-                //this is the list, each object contain brand name
-                List<Customer> list = response.body().getData();
+            public void onResponse(Call<MembershipResponse> call, Response<MembershipResponse> response) {
+                //this is the list
+                List<Membership> list = response.body().getData();
             }
 
             @Override
-            public void onFailure(Call<CustomerResponse> call, Throwable t) {
-                System.out.println("FAIL");
+            public void onFailure(Call<MembershipResponse> call, Throwable t) {
+                System.out.println("GET REGISTED BRAND FAIL");
             }
         });
     }

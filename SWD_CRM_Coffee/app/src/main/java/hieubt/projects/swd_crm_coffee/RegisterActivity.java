@@ -46,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
         String phoneNumber = txtPhoneNumber.getText().toString();
         db.setPhoneNumber(phoneNumber);
+        db.setCustomerCode(phoneNumber); //customer code == phone number
 
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);

@@ -20,8 +20,10 @@ public class NotificationActivity extends AppCompatActivity {
         layoutNoti = findViewById(R.id.layoutNoti);
         DBManager db = new DBManager(this);
         List<NotiDTO> listNoti = db.getListNoti();
-        for (int i = 0; i < listNoti.size(); i++) {
-            createNotification(listNoti.get(i).getNotiTitle(), listNoti.get(i).getNotiBody());
+        if(listNoti != null && listNoti.size() > 0) {
+            for (int i = 0; i < listNoti.size(); i++) {
+                createNotification(listNoti.get(i).getNotiTitle(), listNoti.get(i).getNotiBody());
+            }
         }
     }
 

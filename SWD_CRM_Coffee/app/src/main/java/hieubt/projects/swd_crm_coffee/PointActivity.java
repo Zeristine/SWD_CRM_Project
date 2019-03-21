@@ -20,6 +20,11 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import hieubt.projects.swd_crm_coffee.Model.Mes;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
+import retrofit2.Call;
+
 public class PointActivity extends AppCompatActivity {
 
     SurfaceView cameraPreview;
@@ -27,6 +32,9 @@ public class PointActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+    private final DBManager db = new DBManager(this);
+    MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,4 +118,12 @@ public class PointActivity extends AppCompatActivity {
             }
         }
     }
+
+    //add point to membership's account
+    public void addPoint(double pointAmount) throws IOException {
+        String customerCode = db.getCustomerCode();
+        Call<Mes> call = membershipService.addPoint(customerCode, pointAmount);
+        call.execute();
+    }
+
 }

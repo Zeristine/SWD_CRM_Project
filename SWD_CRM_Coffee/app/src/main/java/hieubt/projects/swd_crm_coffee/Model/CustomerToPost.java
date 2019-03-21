@@ -3,6 +3,7 @@ package hieubt.projects.swd_crm_coffee.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerToPost {
@@ -44,7 +45,7 @@ public class CustomerToPost {
     private String phone;
     @SerializedName("customer_metadata")
     @Expose
-    private List<CustomerMetadataToPost> customerMetadatumToPosts = null;
+    private List<CustomerMetadataToPost> customerMetadatumToPosts = new ArrayList<>();
 
     public Boolean getActive() {
         return active;
@@ -150,4 +151,8 @@ public class CustomerToPost {
         this.customerMetadatumToPosts = customerMetadatumToPosts;
     }
 
+    public CustomerToPost() {
+        CustomerMetadataToPost customerMetadataToPost = new CustomerMetadataToPost();
+        this.customerMetadatumToPosts.add(customerMetadataToPost);
+    }
 }

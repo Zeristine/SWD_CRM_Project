@@ -3,7 +3,7 @@ package hieubt.projects.swd_crm_coffee.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-class CustomerMetadata {
+public class CustomerMetadata {
     @SerializedName("customer_id")
     @Expose
     private Integer customerId;

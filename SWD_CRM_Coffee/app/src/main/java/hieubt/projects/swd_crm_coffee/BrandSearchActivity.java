@@ -8,15 +8,24 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.AccountToPost;
+import hieubt.projects.swd_crm_coffee.Model.Customer;
+import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
 import hieubt.projects.swd_crm_coffee.Model.CustomerToPost;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
+import hieubt.projects.swd_crm_coffee.Model.Membership;
+import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
+import hieubt.projects.swd_crm_coffee.Model.MembershipToPost;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +39,8 @@ public class BrandSearchActivity extends AppCompatActivity {
     private final BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
     private CustomerApiInterface customerService = CustomerApiClient.getClient().create(CustomerApiInterface.class);
     private List<Datum> prevSearchList;
+    DBManager db = new DBManager(this);
+    MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,23 +114,74 @@ public class BrandSearchActivity extends AppCompatActivity {
             }
         });
     }
-    //regist by sending customer phone number + brand name
-    private void registBrand(String brandName) {
-        CustomerToPost customer = new CustomerToPost();
-        customer.setBrandCode(brandName);
-        Call<Mes> call = customerService.registNewBrand(customer);
+
+    //regist a brand (post new membership & account)
+    public void registBrand(String brandName) {
+        String customerCode = db.getCustomerCode();
+        //check regist or not
+        boolean registed = checkRegisted(brandName, customerCode);
+        if (!registed) {
+            //post new membership to api
+            int membershipId = createMembership(brandName,customerCode);
+            //post new account to api
+            createAccount(brandName,customerCode, membershipId);
+        } else {
+            Toast.makeText(this, "already registed " + brandName, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void createAccount(String brandName, String customerCode, int membershipId) {
+        AccountToPost accountToPost = new AccountToPost();
+        accountToPost.setBrandCode(brandName);
+        accountToPost.setCode(customerCode);
+        accountToPost.setMembershipId(membershipId);
+        Call<Mes> call = membershipService.postAccount(accountToPost);
         call.enqueue(new Callback<Mes>() {
             @Override
             public void onResponse(Call<Mes> call, Response<Mes> response) {
-                System.out.println("regist success");
+                System.out.println("POST ACCOUNT OK");
             }
 
             @Override
             public void onFailure(Call<Mes> call, Throwable t) {
-                System.out.println("FAIL");
+                System.out.println("POST ACCOUNT FAIL");
             }
         });
     }
 
+    public int createMembership(String brandName, String customerCode) {
+        MembershipToPost membershipToPost = new MembershipToPost();
+        membershipToPost.setBrandCode(brandName);
+        membershipToPost.setCustomerCode(customerCode);
+        Call<Mes> call = membershipService.postMemberShip(membershipToPost);
+        Response<Mes> response = null;
+        try {
+            response = call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response.body().getData();
+    }
+
+    //check regist or not. True for registed, False for not registed yet
+    public boolean checkRegisted(String brandName, String customerCode){
+        Call<MembershipResponse> call = membershipService.getMemberShipByCode(customerCode);
+        Response<MembershipResponse> response = null;
+        try {
+            response = call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Membership> membershipList = response.body().getData();
+        for (Membership m : membershipList) {
+            if (brandName.equals(m.getBrandCode())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

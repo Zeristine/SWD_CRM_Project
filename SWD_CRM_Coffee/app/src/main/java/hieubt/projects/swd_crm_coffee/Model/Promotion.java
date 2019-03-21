@@ -3,7 +3,12 @@ package hieubt.projects.swd_crm_coffee.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Promotion {
+    @SerializedName("list_days_of_week")
+    @Expose
+    private List<Integer> listDaysOfWeek = null;
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -49,9 +54,12 @@ public class Promotion {
     @SerializedName("event_type")
     @Expose
     private Object eventType;
-    @SerializedName("event_value")
+    @SerializedName("event_type_detail")
     @Expose
-    private Object eventValue;
+    private Object eventTypeDetail;
+    @SerializedName("detail_object")
+    @Expose
+    private Object detailObject;
     @SerializedName("from_date")
     @Expose
     private String fromDate;
@@ -133,6 +141,14 @@ public class Promotion {
     @SerializedName("voucher_used_quantity")
     @Expose
     private Object voucherUsedQuantity;
+
+    public List<Integer> getListDaysOfWeek() {
+        return listDaysOfWeek;
+    }
+
+    public void setListDaysOfWeek(List<Integer> listDaysOfWeek) {
+        this.listDaysOfWeek = listDaysOfWeek;
+    }
 
     public Integer getId() {
         return id;
@@ -254,12 +270,20 @@ public class Promotion {
         this.eventType = eventType;
     }
 
-    public Object getEventValue() {
-        return eventValue;
+    public Object getEventTypeDetail() {
+        return eventTypeDetail;
     }
 
-    public void setEventValue(Object eventValue) {
-        this.eventValue = eventValue;
+    public void setEventTypeDetail(Object eventTypeDetail) {
+        this.eventTypeDetail = eventTypeDetail;
+    }
+
+    public Object getDetailObject() {
+        return detailObject;
+    }
+
+    public void setDetailObject(Object detailObject) {
+        this.detailObject = detailObject;
     }
 
     public String getFromDate() {

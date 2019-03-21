@@ -19,6 +19,9 @@ public class MembershipToPost {
     @SerializedName("code")
     @Expose
     private String code = "string";
+    @SerializedName("emp_code")
+    @Expose
+    private String empCode = "string";
     @SerializedName("created_at_store_code")
     @Expose
     private String createdAtStoreCode = "string";
@@ -40,6 +43,10 @@ public class MembershipToPost {
     @SerializedName("status")
     @Expose
     private Integer status = 1;
+
+    public MembershipToPost(String customerCode) {
+        this.customerCode = customerCode;
+    }
 
     public Boolean getIncludeAccounts() {
         return includeAccounts;
@@ -136,4 +143,21 @@ public class MembershipToPost {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public String getEmpCode() {
+        return empCode;
+    }
+
+    public void setEmpCode(String empCode) {
+        this.empCode = empCode;
+    }
+
+    public Boolean getSample() {
+        return isSample;
+    }
+
+    public void setSample(Boolean sample) {
+        isSample = sample;
+    }
+
 }

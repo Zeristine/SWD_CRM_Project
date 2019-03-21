@@ -38,6 +38,10 @@ public class AccountToPost {
     @Expose
     private Integer type = 1;
 
+    public AccountToPost(String code) {
+        this.code = code;
+    }
+
     public Integer getAccountLevel() {
         return accountLevel;
     }

@@ -132,9 +132,8 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     private void createAccount(String brandName, String customerCode, int membershipId) {
-        AccountToPost accountToPost = new AccountToPost();
+        AccountToPost accountToPost = new AccountToPost(customerCode);
         accountToPost.setBrandCode(brandName);
-        accountToPost.setCode(customerCode);
         accountToPost.setMembershipId(membershipId);
         Call<Mes> call = membershipService.postAccount(accountToPost);
         call.enqueue(new Callback<Mes>() {
@@ -151,9 +150,8 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     public int createMembership(String brandName, String customerCode) {
-        MembershipToPost membershipToPost = new MembershipToPost();
+        MembershipToPost membershipToPost = new MembershipToPost(customerCode);
         membershipToPost.setBrandCode(brandName);
-        membershipToPost.setCustomerCode(customerCode);
         Call<Mes> call = membershipService.postMemberShip(membershipToPost);
         Response<Mes> response = null;
         try {

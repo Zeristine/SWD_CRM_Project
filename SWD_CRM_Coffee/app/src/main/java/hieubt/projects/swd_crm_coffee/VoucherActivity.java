@@ -35,9 +35,9 @@ public class VoucherActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //show all voucher
+        //show all voucher of promotion 31
         BigApiInterface service = BigApiClient.getClient().create(BigApiInterface.class);
-        Call<VoucherResponse> call = service.getAllVoucher();
+        Call<VoucherResponse> call = service.getVoucherByPromotionId(31);
         call.enqueue(new Callback<VoucherResponse>() {
             @Override
             public void onResponse(Call<VoucherResponse> call, Response<VoucherResponse> response) {

@@ -19,11 +19,20 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.Account;
+import hieubt.projects.swd_crm_coffee.Model.AccountResponse;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
+import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PointActivity extends AppCompatActivity {
 
@@ -34,7 +43,7 @@ public class PointActivity extends AppCompatActivity {
     final int RequestCameraPermissionID = 1001;
     private final DBManager db = new DBManager(this);
     MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
-
+    BigApiInterface bigSerivce = BigApiClient.getClient().create(BigApiInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +129,55 @@ public class PointActivity extends AppCompatActivity {
     }
 
     //add point to membership's account
-    public void addPoint(double pointAmount) throws IOException {
+//    public void addPoint(double pointAmount) throws IOException {
+//        String customerCode = db.getCustomerCode();
+//        Call<Mes> call = membershipService.addPoint(customerCode, pointAmount);
+//        call.execute();
+//    }
+    //get point
+    public int getPoint() {
         String customerCode = db.getCustomerCode();
-        Call<Mes> call = membershipService.addPoint(customerCode, pointAmount);
-        call.execute();
-    }
+        Call<AccountResponse> call = membershipService.getAccount(customerCode);
+        try {
+            Response<AccountResponse> response = call.execute();
+            Account account = response.body().getData().get(0);
 
+            return account.getBalance();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    //pay point
+//    public void payPoint(double amount) {
+//        String customerCode = db.getCustomerCode();
+//        Call<Mes> call = membershipService.payPoint(customerCode, amount);
+//        call.enqueue(new Callback<Mes>() {
+//            @Override
+//            public void onResponse(Call<Mes> call, Response<Mes> response) {
+//                System.out.println("pai point ok");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Mes> call, Throwable t) {
+//                System.out.println("pay point fail");
+//            }
+//        });
+//    }
+    //post voucher
+    public void postVoucher() {
+        Call<Mes> call = bigSerivce.postVoucherByPromotionId(31, 1, 1);
+        call.enqueue(new Callback<Mes>() {
+            @Override
+            public void onResponse(Call<Mes> call, Response<Mes> response) {
+                System.out.println("post voucher ok");
+            }
+
+            @Override
+            public void onFailure(Call<Mes> call, Throwable t) {
+                System.out.println("post voucher fail");
+            }
+        });
+    }
 }

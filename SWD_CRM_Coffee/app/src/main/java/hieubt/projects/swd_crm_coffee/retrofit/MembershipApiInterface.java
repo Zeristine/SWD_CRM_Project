@@ -18,7 +18,7 @@ public interface MembershipApiInterface {
     @GET("memberships")
     Call<MembershipResponse> getMemberShipByCode(@Query("of_customer_code") String customerCode);
 
-    @POST("membership")
+    @POST("memberships")
     Call<Mes> postMemberShip(@Body MembershipToPost membershipToPost);
 
     @GET("accounts")
@@ -28,8 +28,8 @@ public interface MembershipApiInterface {
     Call<Mes> postAccount(@Body AccountToPost accountToPost);
 
     @PATCH("accounts/add_point")
-    Call<Mes> addPoint(@Query("acc_code") String customerCode, @Query("point") double point);
+    Call<Mes> addPoint(@Query("acc_code") String customerCode, @Query("point") int point);
 
     @PATCH("accounts/pay")
-    Call<Mes> payPoint(@Query("acc_code") String customerCode, @Query("amount") double amount);
+    Call<Mes> payPoint(@Query("acc_code") String customerCode, @Query("amount") int amount);
 }

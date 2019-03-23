@@ -6,21 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".PointActivity"
     android:orientation="vertical">
-    <SurfaceView
-        android:id="@+id/cameraPreview"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="480px"
-        android:layout_gravity="center"/>
-    <TextView
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:textSize="20dp"
-        android:layout_below="@+id/cameraPreview"
-        android:id="@+id/txtResult"
-        android:layout_marginTop="20dp"
-        android:text="@string/result_text_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <SurfaceView
+                android:id="@+id/cameraPreview"
+                android:layout_width="match_parent"
+                android:layout_height="480px"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textSize="20dp"
+                android:layout_below="@+id/cameraPreview"
+                android:id="@+id/txtResult"
+                android:layout_marginTop="20dp"
+                android:text="@string/result_text_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

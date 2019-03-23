@@ -13,10 +13,11 @@ public class DBManager extends SQLiteOpenHelper {
 
     private Context mContext;
 
-    public DBManager(Context context){
+    public DBManager(Context context) {
         super(context, "SWS_database", null, 1);
-        this.mContext= context;
+        this.mContext = context;
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sqlQuery = "CREATE TABLE \"registedBrand_table\" (\n" +
@@ -46,6 +47,7 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
 
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -122,14 +124,14 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     //get Brand
-    public boolean checkUserRegisterBrand(int userId, int brandId){
+    public boolean checkUserRegisterBrand(int userId, int brandId) {
         boolean result = false;
         String query = "SELECT brandId " +
                 "FROM user_table JOIN registedBrand_table on user_table.id = registedBrand_table.userId " +
                 "WHERE user_table.id = " + String.valueOf(userId) + " AND registedBrand_table.brandId = " + String.valueOf(brandId);
-        SQLiteDatabase db =  this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             result = true;
         }
         cursor.close();
@@ -161,7 +163,7 @@ public class DBManager extends SQLiteOpenHelper {
     public String getPhoneNumber() {
         String query = "select * from phoneNumber_table";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.query("phoneNumber_table", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             String phoneNumber = cursor.getString(0);
             return phoneNumber;
@@ -169,6 +171,7 @@ public class DBManager extends SQLiteOpenHelper {
             return "";
         }
     }
+
     public void setCustomerCode(String customerCode) {
         ContentValues values = new ContentValues();
         values.put("customerCode", customerCode);
@@ -180,7 +183,7 @@ public class DBManager extends SQLiteOpenHelper {
     public String getCustomerCode() {
         String query = "select * from customerCode_table";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.query("customerCode_table", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             String customerCode = cursor.getString(0);
             return customerCode;

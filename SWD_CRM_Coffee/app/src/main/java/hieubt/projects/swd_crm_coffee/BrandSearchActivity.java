@@ -26,6 +26,7 @@ import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
+import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,8 +76,6 @@ public class BrandSearchActivity extends AppCompatActivity {
         //check regist
         //create membership
         //create account
-        createMembership("PASSIO", "abcde");
-
     }
 
     private void getSearchResult(String value) {
@@ -85,10 +84,23 @@ public class BrandSearchActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Datum>> call, Response<List<Datum>> response) {
                 List<Datum> datas = response.body();
+                datas.add(new Datum("PASSIO"));
+                List<Membership> list = UserSession.getUserMembership();
                 if (datas != prevSearchList) {
                     mainLayout.removeAllViews();
                     for (Datum data : datas) {
-                        itemGenerator.createRectangleWithLabel(data.getBrandName(), data.getId(), 1, mainLayout);
+                        boolean check = false;
+                        for(Membership membership : list){
+                            if(membership.getBrandCode().equals(data.getBrandName())){
+                                check = true;
+                                break;
+                            }
+                        }
+                        if(check){
+                            itemGenerator.createRectangleWithLabel(data, mainLayout, "true");
+                        }else{
+                            itemGenerator.createRectangleWithLabel(data, mainLayout, "false");
+                        }
                     }
                 }
                 prevSearchList = datas;
@@ -107,9 +119,21 @@ public class BrandSearchActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Datum>> call, Response<List<Datum>> response) {
                 List<Datum> datas = response.body();
-                mainLayout.removeAllViews();
+                datas.add(new Datum("PASSIO"));
+                List<Membership> list = UserSession.getUserMembership();
                 for (Datum data : datas) {
-                    itemGenerator.createRectangleWithLabel(data.getBrandName(), data.getId(), 1, mainLayout);
+                    boolean check = false;
+                    for(Membership membership : list){
+                        if(membership.getBrandCode().equals(data.getBrandName())){
+                            check = true;
+                            break;
+                        }
+                    }
+                    if(check){
+                        itemGenerator.createRectangleWithLabel(data, mainLayout, "true");
+                    }else{
+                        itemGenerator.createRectangleWithLabel(data, mainLayout, "false");
+                    }
                 }
             }
 
@@ -118,65 +142,6 @@ public class BrandSearchActivity extends AppCompatActivity {
                 System.out.println("FAIL");
             }
         });
-    }
-
-    //regist a brand (post new membership & account)
-//    public void registBrand(String brandName) {
-//        String customerCode = db.getCustomerCode();
-//        //check regist or not
-//        boolean registed = checkRegisted(brandName, customerCode);
-//        if (!registed) {
-//            //post new membership to api
-//            int membershipId = createMembership(brandName,customerCode);
-//            //post new account to api
-//            createAccount(brandName,customerCode, membershipId);
-//        } else {
-//            Toast.makeText(this, "already registed " + brandName, Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-
-    private void createAccount(String brandName, String customerCode, int membershipId) {
-        AccountToPost accountToPost = new AccountToPost(customerCode);
-        accountToPost.setBrandCode(brandName);
-        accountToPost.setMembershipId(membershipId);
-        Call<Mes> call = membershipService.postAccount(accountToPost);
-        call.enqueue(new Callback<Mes>() {
-            @Override
-            public void onResponse(Call<Mes> call, Response<Mes> response) {
-                System.out.println("POST ACCOUNT OK");
-            }
-
-            @Override
-            public void onFailure(Call<Mes> call, Throwable t) {
-                System.out.println("POST ACCOUNT FAIL");
-                System.out.println(t.toString());
-
-            }
-        });
-    }
-
-    public void createMembership(final String brandName,final String customerCode) {
-        MembershipToPost membershipToPost = new MembershipToPost(customerCode);
-        membershipToPost.setBrandCode(brandName);
-        Call<PostMembershipResponse> call1 = membershipService.postMemberShip(membershipToPost);
-        call1.enqueue(new Callback<PostMembershipResponse>() {
-            @Override
-            public void onResponse(Call<PostMembershipResponse> call, Response<PostMembershipResponse> response) {
-                int membershipId = response.body().getData().getId();
-                System.out.println("create membership ok, membershipID: " + membershipId);
-                createAccount(brandName, customerCode, membershipId);
-            }
-
-            @Override
-            public void onFailure(Call<PostMembershipResponse> call, Throwable t) {
-                System.out.println("create membership fail");
-                System.out.println(t.toString());
-
-            }
-        });
-
-
     }
 
     //check regist or not. True for registed, False for not registed yet

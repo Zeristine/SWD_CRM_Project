@@ -2,9 +2,7 @@ package hieubt.projects.swd_crm_coffee.ultilities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +14,7 @@ import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 
 import hieubt.projects.swd_crm_coffee.BrandDetailActivity;
+import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.R;
 
 public class ItemGenerator {
@@ -26,10 +25,8 @@ public class ItemGenerator {
         this.context = context;
     }
 
-    public void createRectangleWithLabel(final String label, final int brandId, final int userId, LinearLayout layout) {
+    public void createRectangleWithLabel(final Datum data, LinearLayout layout, String isRegistered) {
         TextView textView = new TextView(context);
-
-        textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
                 , 200);
@@ -39,17 +36,38 @@ public class ItemGenerator {
         layoutParams.bottomMargin = 5;
         textView.setLayoutParams(layoutParams);
 
-        textView.setText(label);
+        textView.setText(data.getBrandName());
         textView.setGravity(Gravity.CENTER);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-        textView.setTextColor(context.getResources().getColor(R.color.black));
+        if (isRegistered == null) {
+            textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
+            textView.setTextColor(context.getResources().getColor(R.color.black));
+        } else {
+            switch (isRegistered) {
+                case "true":
+                    textView.setBackgroundResource(R.color.grey700);
+                    textView.setTextColor(context.getResources().getColor(R.color.white));
+                    textView.setText(data.getBrandName() + "\n(Registered)");
+                    break;
+                case "false":
+                    textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
+                    textView.setTextColor(context.getResources().getColor(R.color.black));
+                    break;
+            }
+        }
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BrandDetailActivity.class);
-                intent.putExtra("brandId", brandId);
-                intent.putExtra("userId", userId);
+                intent.putExtra("name", data.getBrandName());
+                intent.putExtra("website", data.getWebsite());
+                intent.putExtra("contract", data.getContactPerson());
+                intent.putExtra("fax", data.getFax());
+                intent.putExtra("phone", data.getPhoneNumber());
+                intent.putExtra("description", data.getDescription());
+                intent.putExtra("createDate", data.getCreateDate());
+                intent.putExtra("company", data.getCompanyName());
                 context.startActivity(intent);
             }
         });
@@ -131,7 +149,7 @@ public class ItemGenerator {
         layout.addView(textView);
     }
 
-    public void createNotification(){
+    public void createNotification() {
 
     }
 }

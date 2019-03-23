@@ -2,16 +2,21 @@ package hieubt.projects.swd_crm_coffee;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -19,7 +24,6 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
-import java.util.List;
 
 import hieubt.projects.swd_crm_coffee.Model.Account;
 import hieubt.projects.swd_crm_coffee.Model.AccountResponse;
@@ -27,10 +31,9 @@ import hieubt.projects.swd_crm_coffee.Model.Mes;
 import hieubt.projects.swd_crm_coffee.Model.MesObject;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
-import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
-import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
+import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +45,7 @@ public class PointActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+    private DisplayMetrics displayMetrics = new DisplayMetrics();
     private final DBManager db = new DBManager(this);
     MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
     BigApiInterface bigSerivce = BigApiClient.getClient().create(BigApiInterface.class);
@@ -53,6 +57,12 @@ public class PointActivity extends AppCompatActivity {
 
         cameraPreview = findViewById(R.id.cameraPreview);
         txtResult = findViewById(R.id.txtResult);
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                (displayMetrics.widthPixels * 4) / 5,
+                (displayMetrics.heightPixels * 4) / 5
+        );
+        cameraPreview.setLayoutParams(params);
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE)
@@ -61,7 +71,6 @@ public class PointActivity extends AppCompatActivity {
                 .Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(640, 480)
                 .build();
-
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -97,13 +106,16 @@ public class PointActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                if(qrcodes.size() != 0){
+                if (qrcodes.size() != 0) {
                     txtResult.post(new Runnable() {
                         @Override
                         public void run() {
-                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(1000);
                             txtResult.setText(qrcodes.valueAt(0).displayValue);
+                            Intent intent = new Intent(PointActivity.this, GetPointActivity.class);
+                            intent.putExtra("barcode", qrcodes.valueAt(0).displayValue);
+                            startActivity(intent);
                         }
                     });
                 }
@@ -147,21 +159,25 @@ public class PointActivity extends AppCompatActivity {
         });
 
     }
+
     //get point
     public int getPoint() {
         String customerCode = db.getCustomerCode();
         Call<AccountResponse> call = membershipService.getAccount(customerCode);
-        try {
-            Response<AccountResponse> response = call.execute();
-            Account account = response.body().getData().get(0);
+        call.enqueue(new Callback<AccountResponse>() {
+            @Override
+            public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                Account account = response.body().getData().get(0);
+            }
 
-            return account.getBalance();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            @Override
+            public void onFailure(Call<AccountResponse> call, Throwable t) {
+                Toast.makeText(PointActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
         return 0;
     }
+
     //pay point
     public void payPoint(int amount) {
         String customerCode = db.getCustomerCode();
@@ -178,6 +194,7 @@ public class PointActivity extends AppCompatActivity {
             }
         });
     }
+
     //post voucher
     public void postVoucher() {
         Call<Mes> call = bigSerivce.postVoucherByPromotionId(31, 1, 1);

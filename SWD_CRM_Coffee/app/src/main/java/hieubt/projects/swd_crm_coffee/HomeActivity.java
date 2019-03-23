@@ -27,6 +27,7 @@ import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
+import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,33 +60,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getListOfRegisteredBrand();
+        getListOfRegisteredBrandByCustomerCode(db.getCustomerCode());
     }
 
-    private void getListOfRegisteredBrand(){
-        //////////////////////////////////////////
-        //show all registed brand
-        //get list registed brand
-        layoutHome.removeAllViews();
-        List<Integer> listBrandId = db.getAllRegistedBrandId(1);
-        //call api with each brand id
-        BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
-        for (Integer id : listBrandId) {
-            Call<Example> call = service.getBrandById(id);
-            call.enqueue(new Callback<Example>() {
-                @Override
-                public void onResponse(Call<Example> call, Response<Example> response) {
-                    Datum data = response.body().getData();
-                    itemGenerator.createRectangleWithLabel(data.getBrandName(),data.getId(), 1,layoutHome);
-                }
-
-                @Override
-                public void onFailure(Call<Example> call, Throwable t) {
-                    System.out.println("FAIL");
-                }
-            });
-        }
-    }
 
     //get registed brand by customer code
     private void getListOfRegisteredBrandByCustomerCode(String customerCode) {
@@ -94,8 +71,18 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MembershipResponse> call, Response<MembershipResponse> response) {
                 //this is the list
+                layoutHome.removeAllViews();
                 List<Membership> list = response.body().getData();
-
+                for (Membership membership: list ) {
+                    Datum data = new Datum(membership.getBrandCode());
+                    data.setWebsite("passio.com.vn");
+                    data.setContactPerson("Hà Triệu Kim");
+                    data.setPhoneNumber("099999999");
+                    data.setFax("908788");
+                    data.setDescription("The Good Coffee Chain System");
+                    itemGenerator.createRectangleWithLabel(data,layoutHome, null);
+                }
+                UserSession.getUserMembership().addAll(list);
             }
 
             @Override

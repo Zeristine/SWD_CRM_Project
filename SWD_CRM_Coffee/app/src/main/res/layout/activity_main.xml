@@ -29,5 +29,15 @@
         android:layout_height="wrap_content"
         android:text="register"
         android:onClick="clickToRegister"/>
+    <EditText
+        android:id="@+id/txtPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="phone number"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Regist by phone number"
+        android:onClick="clickToRegisByPhone"/>
 
 </LinearLayout>

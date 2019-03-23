@@ -16,7 +16,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText txtUsername;
     private EditText txtPassword;
+    private EditText txtPhoneNumber;
+
     private final int PERMISSION_REQUEST_CAMERA = 123;
+    DBManager db = new DBManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
         txtUsername = findViewById(R.id.txtUsername);
         txtPassword = findViewById(R.id.txtPassword);
+        txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
+
+        String phoneNumber = db.getPhoneNumber();
+        if (!phoneNumber.isEmpty()) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     public void clickToNavigate(View view) {
@@ -70,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void clickToRegisByPhone(View view) {
+        String phoneNumber = txtPhoneNumber.getText().toString();
+        db.setPhoneNumber(phoneNumber);
+        db.setCustomerCode(phoneNumber); //customer code == phone number
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
 }

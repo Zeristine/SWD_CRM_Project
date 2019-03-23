@@ -24,6 +24,7 @@ import java.util.List;
 import hieubt.projects.swd_crm_coffee.Model.Account;
 import hieubt.projects.swd_crm_coffee.Model.AccountResponse;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
+import hieubt.projects.swd_crm_coffee.Model.MesObject;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
@@ -129,11 +130,23 @@ public class PointActivity extends AppCompatActivity {
     }
 
     //add point to membership's account
-//    public void addPoint(double pointAmount) throws IOException {
-//        String customerCode = db.getCustomerCode();
-//        Call<Mes> call = membershipService.addPoint(customerCode, pointAmount);
-//        call.execute();
-//    }
+    public void addPoint(int pointAmount) throws IOException {
+        String customerCode = db.getCustomerCode();
+        Call<MesObject> call = membershipService.addPoint(customerCode, pointAmount);
+        call.enqueue(new Callback<MesObject>() {
+            @Override
+            public void onResponse(Call<MesObject> call, Response<MesObject> response) {
+                System.out.println("add point ok");
+            }
+
+            @Override
+            public void onFailure(Call<MesObject> call, Throwable t) {
+                System.out.println("add point fail");
+                System.out.println(t.toString());
+            }
+        });
+
+    }
     //get point
     public int getPoint() {
         String customerCode = db.getCustomerCode();
@@ -150,21 +163,21 @@ public class PointActivity extends AppCompatActivity {
         return 0;
     }
     //pay point
-//    public void payPoint(double amount) {
-//        String customerCode = db.getCustomerCode();
-//        Call<Mes> call = membershipService.payPoint(customerCode, amount);
-//        call.enqueue(new Callback<Mes>() {
-//            @Override
-//            public void onResponse(Call<Mes> call, Response<Mes> response) {
-//                System.out.println("pai point ok");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Mes> call, Throwable t) {
-//                System.out.println("pay point fail");
-//            }
-//        });
-//    }
+    public void payPoint(int amount) {
+        String customerCode = db.getCustomerCode();
+        Call<MesObject> call = membershipService.payPoint(customerCode, amount);
+        call.enqueue(new Callback<MesObject>() {
+            @Override
+            public void onResponse(Call<MesObject> call, Response<MesObject> response) {
+                System.out.println("pai point ok");
+            }
+
+            @Override
+            public void onFailure(Call<MesObject> call, Throwable t) {
+                System.out.println("pay point fail");
+            }
+        });
+    }
     //post voucher
     public void postVoucher() {
         Call<Mes> call = bigSerivce.postVoucherByPromotionId(31, 1, 1);

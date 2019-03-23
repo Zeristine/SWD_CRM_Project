@@ -36,7 +36,19 @@ public class HomeActivityTest {
     @Test
     public void tete() throws IOException {
         System.out.println("lingling company");
+        MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
+        MembershipToPost membershipToPost = new MembershipToPost("123456");
+        membershipToPost.setBrandCode("PASSIO");
+        Call<Mes> call1 = membershipService.postMemberShip(membershipToPost);
+        call1.enqueue(new Callback<Mes>() {
+            @Override
+            public void onResponse(Call<Mes> call, Response<Mes> response) {
+            }
 
-
+            @Override
+            public void onFailure(Call<Mes> call, Throwable t) {
+                System.out.println("create membership fail");
+            }
+        });
     }
 }

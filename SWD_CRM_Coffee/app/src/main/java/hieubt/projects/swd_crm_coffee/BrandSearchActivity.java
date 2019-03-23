@@ -12,14 +12,13 @@ import java.io.IOException;
 import java.util.List;
 
 import hieubt.projects.swd_crm_coffee.Model.AccountToPost;
-import hieubt.projects.swd_crm_coffee.Model.Customer;
-import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
-import hieubt.projects.swd_crm_coffee.Model.CustomerToPost;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Membership;
 import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
 import hieubt.projects.swd_crm_coffee.Model.MembershipToPost;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
+import hieubt.projects.swd_crm_coffee.Model.MesObject;
+import hieubt.projects.swd_crm_coffee.Model.PostMembershipResponse;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
@@ -72,6 +71,12 @@ public class BrandSearchActivity extends AppCompatActivity {
 
             }
         });
+
+        //check regist
+        //create membership
+        //create account
+        createMembership("PASSIO", "abcde");
+
     }
 
     private void getSearchResult(String value) {
@@ -116,20 +121,20 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     //regist a brand (post new membership & account)
-    public void registBrand(String brandName) {
-        String customerCode = db.getCustomerCode();
-        //check regist or not
-        boolean registed = checkRegisted(brandName, customerCode);
-        if (!registed) {
-            //post new membership to api
-            int membershipId = createMembership(brandName,customerCode);
-            //post new account to api
-            createAccount(brandName,customerCode, membershipId);
-        } else {
-            Toast.makeText(this, "already registed " + brandName, Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    public void registBrand(String brandName) {
+//        String customerCode = db.getCustomerCode();
+//        //check regist or not
+//        boolean registed = checkRegisted(brandName, customerCode);
+//        if (!registed) {
+//            //post new membership to api
+//            int membershipId = createMembership(brandName,customerCode);
+//            //post new account to api
+//            createAccount(brandName,customerCode, membershipId);
+//        } else {
+//            Toast.makeText(this, "already registed " + brandName, Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     private void createAccount(String brandName, String customerCode, int membershipId) {
         AccountToPost accountToPost = new AccountToPost(customerCode);
@@ -145,22 +150,33 @@ public class BrandSearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Mes> call, Throwable t) {
                 System.out.println("POST ACCOUNT FAIL");
+                System.out.println(t.toString());
+
             }
         });
     }
 
-    public int createMembership(String brandName, String customerCode) {
+    public void createMembership(final String brandName,final String customerCode) {
         MembershipToPost membershipToPost = new MembershipToPost(customerCode);
         membershipToPost.setBrandCode(brandName);
-        Call<Mes> call = membershipService.postMemberShip(membershipToPost);
-        Response<Mes> response = null;
-        try {
-            response = call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Call<PostMembershipResponse> call1 = membershipService.postMemberShip(membershipToPost);
+        call1.enqueue(new Callback<PostMembershipResponse>() {
+            @Override
+            public void onResponse(Call<PostMembershipResponse> call, Response<PostMembershipResponse> response) {
+                int membershipId = response.body().getData().getId();
+                System.out.println("create membership ok, membershipID: " + membershipId);
+                createAccount(brandName, customerCode, membershipId);
+            }
 
-        return response.body().getData();
+            @Override
+            public void onFailure(Call<PostMembershipResponse> call, Throwable t) {
+                System.out.println("create membership fail");
+                System.out.println(t.toString());
+
+            }
+        });
+
+
     }
 
     //check regist or not. True for registed, False for not registed yet

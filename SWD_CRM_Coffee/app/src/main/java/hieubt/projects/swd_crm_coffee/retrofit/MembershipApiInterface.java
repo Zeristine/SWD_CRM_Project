@@ -5,6 +5,8 @@ import hieubt.projects.swd_crm_coffee.Model.AccountToPost;
 import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
 import hieubt.projects.swd_crm_coffee.Model.MembershipToPost;
 import hieubt.projects.swd_crm_coffee.Model.Mes;
+import hieubt.projects.swd_crm_coffee.Model.MesObject;
+import hieubt.projects.swd_crm_coffee.Model.PostMembershipResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -19,7 +21,7 @@ public interface MembershipApiInterface {
     Call<MembershipResponse> getMemberShipByCode(@Query("of_customer_code") String customerCode);
 
     @POST("memberships")
-    Call<Mes> postMemberShip(@Body MembershipToPost membershipToPost);
+    Call<PostMembershipResponse> postMemberShip(@Body MembershipToPost membershipToPost);
 
     @GET("accounts")
     Call<AccountResponse> getAccount(@Query("codes") String customerCode);
@@ -28,8 +30,8 @@ public interface MembershipApiInterface {
     Call<Mes> postAccount(@Body AccountToPost accountToPost);
 
     @PATCH("accounts/add_point")
-    Call<Mes> addPoint(@Query("acc_code") String customerCode, @Query("point") int point);
+    Call<MesObject> addPoint(@Query("acc_code") String customerCode, @Query("point") int point);
 
     @PATCH("accounts/pay")
-    Call<Mes> payPoint(@Query("acc_code") String customerCode, @Query("amount") int amount);
+    Call<MesObject> payPoint(@Query("acc_code") String customerCode, @Query("amount") int amount);
 }

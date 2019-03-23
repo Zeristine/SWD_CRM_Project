@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -87,20 +88,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     //get registed brand by customer code
-    private void getListOfRegisteredBrandByPhonenumber() {
-        //get customer code
-        String customerCode = db.getCustomerCode();
+    private void getListOfRegisteredBrandByCustomerCode(String customerCode) {
         Call<MembershipResponse> call = membershipService.getMemberShipByCode(customerCode);
         call.enqueue(new Callback<MembershipResponse>() {
             @Override
             public void onResponse(Call<MembershipResponse> call, Response<MembershipResponse> response) {
                 //this is the list
                 List<Membership> list = response.body().getData();
+
             }
 
             @Override
             public void onFailure(Call<MembershipResponse> call, Throwable t) {
                 System.out.println("GET REGISTED BRAND FAIL");
+                System.out.println(t.toString());
             }
         });
     }

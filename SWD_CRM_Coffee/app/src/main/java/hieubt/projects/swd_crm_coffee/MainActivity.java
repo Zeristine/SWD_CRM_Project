@@ -16,7 +16,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText txtUsername;
     private EditText txtPassword;
+    private EditText txtPhoneNumber;
+
     private final int PERMISSION_REQUEST_CAMERA = 123;
+    DBManager db = new DBManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
         txtUsername = findViewById(R.id.txtUsername);
         txtPassword = findViewById(R.id.txtPassword);
+        txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
+
+        String phoneNumber = db.getPhoneNumber();
+        if (!phoneNumber.isEmpty()) {
+            Intent intent = new Intent(this, TabNavigationActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
     public void clickToNavigate(View view) {
@@ -62,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         int grantResult = grantResults[i];
                         if (permission.equals(Manifest.permission.CAMERA) && grantResult == PackageManager.PERMISSION_GRANTED) {
                             Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(this, "Please grant the permission if you want to scan the code",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -70,6 +82,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void clickToRegisByPhone(View view) {
+        String phoneNumber = txtPhoneNumber.getText().toString();
+        if (phoneNumber.isEmpty()) {
+            Toast.makeText(this, "Need to input phone Number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        db.setPhoneNumber(phoneNumber);
+        db.setCustomerCode(phoneNumber); //customer code == phone number
+
+        Intent intent = new Intent(this, TabNavigationActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

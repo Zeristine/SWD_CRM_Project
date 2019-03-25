@@ -100,6 +100,13 @@ public class Datum {
     @Expose
     private String rsaPublicKey;
 
+    public Datum() {
+    }
+
+    public Datum(String brandName) {
+        this.brandName = brandName;
+    }
+
     public List<ListStore> getListStore() {
         return listStore;
     }

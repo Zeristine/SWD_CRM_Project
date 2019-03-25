@@ -9,6 +9,8 @@ import android.view.View;
 
 import java.util.List;
 
+import hieubt.projects.swd_crm_coffee.Model.Account;
+import hieubt.projects.swd_crm_coffee.Model.AccountResponse;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Promotion;
 import hieubt.projects.swd_crm_coffee.Model.PromotionResponse;
@@ -16,11 +18,16 @@ import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MemberStatusActivity extends AppCompatActivity {
+
+    private final DBManager db = new DBManager(this);
+    MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,25 @@ public class MemberStatusActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<PromotionResponse> call, Throwable t) {
                 System.out.println("FAIL");
+            }
+        });
+    }
+
+    public void getPoint() {
+        String customerCode = db.getCustomerCode();
+        Call<AccountResponse> call = membershipService.getAccount(customerCode);
+        call.enqueue(new Callback<AccountResponse>() {
+            @Override
+            public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
+                //this is the account
+                Account account = response.body().getData().get(0);
+                //this is the point
+                int point = account.getBalance();
+            }
+
+            @Override
+            public void onFailure(Call<AccountResponse> call, Throwable t) {
+                System.out.println("GET ACCOUNT FAIL");
             }
         });
     }

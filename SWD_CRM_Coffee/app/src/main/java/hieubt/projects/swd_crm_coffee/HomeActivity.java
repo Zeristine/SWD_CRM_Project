@@ -18,11 +18,16 @@ import hieubt.projects.swd_crm_coffee.Model.Customer;
 import hieubt.projects.swd_crm_coffee.Model.CustomerResponse;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Example;
+import hieubt.projects.swd_crm_coffee.Model.Membership;
+import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiInterface;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
+import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
+import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageButton btnSearch;
     private final ItemGenerator itemGenerator = new ItemGenerator(HomeActivity.this);
     private final DBManager db = new DBManager(this);
+    MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,55 +54,41 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getListOfRegisteredBrand();
+        getListOfRegisteredBrandByCustomerCode(db.getCustomerCode());
     }
 
-    private void getListOfRegisteredBrand(){
-        //////////////////////////////////////////
-        //show all registed brand
-        //get list registed brand
-        layoutHome.removeAllViews();
-        List<Integer> listBrandId = db.getAllRegistedBrandId(1);
-        //call api with each brand id
-        BrandApiInterface service = BrandApiClient.getClient().create(BrandApiInterface.class);
-        for (Integer id : listBrandId) {
-            Call<Example> call = service.getBrandById(id);
-            call.enqueue(new Callback<Example>() {
-                @Override
-                public void onResponse(Call<Example> call, Response<Example> response) {
-                    Datum data = response.body().getData();
-                    itemGenerator.createRectangleWithLabel(data.getBrandName(),data.getId(), 1,layoutHome);
-                }
 
-                @Override
-                public void onFailure(Call<Example> call, Throwable t) {
-                    System.out.println("FAIL");
-                }
-            });
-        }
-    }
-
-    //return registed brand by phone
-    private void getListOfRegisteredBrandByPhonenumber() {
-        //get phone number from db
-        String phoneNumber = db.getPhoneNumber();
-        CustomerApiInterface service = CustomerApiClient.getClient().create(CustomerApiInterface.class);
-        Call<CustomerResponse> call = service.getRegistedBrand(phoneNumber);
-        call.enqueue(new Callback<CustomerResponse>() {
+    //get registed brand by customer code
+    private void getListOfRegisteredBrandByCustomerCode(String customerCode) {
+        Call<MembershipResponse> call = membershipService.getMemberShipByCode(customerCode);
+        call.enqueue(new Callback<MembershipResponse>() {
             @Override
-            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
-                //this is the list, each object contain brand name
-                List<Customer> list = response.body().getData();
+            public void onResponse(Call<MembershipResponse> call, Response<MembershipResponse> response) {
+                //this is the list
+                layoutHome.removeAllViews();
+                List<Membership> list = response.body().getData();
+                for (Membership membership: list ) {
+                    Datum data = new Datum(membership.getBrandCode());
+                    data.setWebsite("passio.com.vn");
+                    data.setContactPerson("Hà Triệu Kim");
+                    data.setPhoneNumber("099999999");
+                    data.setFax("908788");
+                    data.setDescription("The Good Coffee Chain System");
+                    itemGenerator.createRectangleWithLabel(data,layoutHome, null);
+                }
+                UserSession.getUserMembership().addAll(list);
             }
 
             @Override
-            public void onFailure(Call<CustomerResponse> call, Throwable t) {
-                System.out.println("FAIL");
+            public void onFailure(Call<MembershipResponse> call, Throwable t) {
+                System.out.println("GET REGISTED BRAND FAIL");
+                System.out.println(t.toString());
             }
         });
     }

@@ -1,19 +1,13 @@
 package hieubt.projects.swd_crm_coffee;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.TabActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -43,20 +37,31 @@ public class TabNavigationActivity extends TabActivity {
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                if(tabId.equals("Point")){
-                    if(ActivityCompat.checkSelfPermission(TabNavigationActivity.this, Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED){
+                setTextColorSelectionForTab();
+                if (tabId.equals("Point")) {
+                    if (ActivityCompat.checkSelfPermission(TabNavigationActivity.this, Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
                         Toast.makeText(TabNavigationActivity.this, "Please request permission from another time",
                                 Toast.LENGTH_SHORT).show();
                         tabHost.setCurrentTabByTag(prevTabId);
-                    }else{
+                    } else {
                         prevTabId = tabId;
                     }
-                }else{
+                } else {
                     prevTabId = tabId;
                 }
             }
         });
+        for (int i = 0; i < getTabWidget().getTabCount(); i++) {
+            View v = getTabWidget().getChildTabViewAt(i);
+            v.setBackgroundResource(R.drawable.brand_tab_indicator);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTextColorSelectionForTab();
     }
 
     private void addCustomTab(String label, int drawableId, Intent intent) {
@@ -71,4 +76,13 @@ public class TabNavigationActivity extends TabActivity {
         tabHost.addTab(tab);
     }
 
+    private void setTextColorSelectionForTab() {
+        for (int i = 0; i < getTabWidget().getChildCount(); i++) {
+            TextView tv = getTabWidget().getChildAt(i).findViewById(R.id.txtTab);
+            tv.setTextColor(getResources().getColor(R.color.black));
+        }
+
+        TextView tv = getTabHost().getCurrentTabView().findViewById(R.id.txtTab);
+        tv.setTextColor(getResources().getColor(R.color.white));
+    }
 }

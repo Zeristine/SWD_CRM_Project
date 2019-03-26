@@ -125,25 +125,53 @@
                                 android:text="PROMOTIONS"
                                 android:textColor="@color/white"
                                 android:textSize="15sp" />
+
+                            <LinearLayout
+                                android:id="@+id/layoutPromotion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+
+                            <TextView
+                                android:id="@+id/txtNotFound1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="No Promotions available\nat the moment..."
+                                android:textAlignment="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </ScrollView>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutVoucher"
+                    android:id="@+id/layoutMainVoucher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
+
                     <TextView
-                        android:id="@+id/txtNotFound"
+                        android:id="@+id/txtNotFound2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textAlignment="center"
                         android:text="No Voucher available\nat the moment..."
+                        android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:id="@+id/layoutVoucher"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            />
+                    </ScrollView>
                 </LinearLayout>
             </FrameLayout>
         </RelativeLayout>
@@ -162,8 +190,8 @@
             android:layout_weight="2"
             android:background="@drawable/radius_left"
             android:onClick="clickToFinish"
-            android:textColor="@color/white"
             android:text="Back"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <TextView
@@ -185,9 +213,9 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:background="@drawable/radius_right"
-            android:textColor="@color/white"
             android:onClick="clickToFinish"
             android:text="Unregister"
+            android:textColor="@color/white"
             android:textSize="10sp" />
     </LinearLayout>
 </RelativeLayout>

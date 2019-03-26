@@ -37,7 +37,7 @@
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:text="No Notifications available\nat the moment..."
-                android:textColor="@color/blueLight500"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -161,7 +161,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public String getPhoneNumber() {
-        String query = "select * from phoneNumber_table";
+//        String query = "select * from phoneNumber_table";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("phoneNumber_table", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -181,7 +181,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public String getCustomerCode() {
-        String query = "select * from customerCode_table";
+//        String query = "select * from customerCode_table";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("customerCode_table", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {

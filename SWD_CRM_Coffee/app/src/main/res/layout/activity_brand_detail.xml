@@ -8,8 +8,7 @@
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,13 +23,13 @@
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginVertical="50sp">
 
                 <LinearLayout
                     android:id="@+id/layoutStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <ScrollView
@@ -50,16 +49,17 @@
                                 android:layout_gravity="center"
                                 android:text="0\nPOINT"
                                 android:textAlignment="center"
-                                android:textColor="@color/black"
+                                android:textColor="@color/blueLight500"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/blueLight200"
+                                android:background="@color/blueLight500"
                                 android:gravity="center"
+                                android:paddingVertical="10sp"
                                 android:text="INFORMATION"
-                                android:textColor="@color/black"
+                                android:textColor="@color/white"
                                 android:textSize="15sp" />
 
                             <LinearLayout
@@ -99,10 +99,11 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/blueLight200"
+                                android:background="@color/blueLight500"
                                 android:gravity="center"
+                                android:paddingVertical="10sp"
                                 android:text="ADDRESS"
-                                android:textColor="@color/black"
+                                android:textColor="@color/white"
                                 android:textSize="15sp" />
 
                             <TextView
@@ -118,10 +119,11 @@
                                 android:id="@+id/txtPromotion"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/blueLight200"
+                                android:background="@color/blueLight500"
                                 android:gravity="center"
+                                android:paddingVertical="10sp"
                                 android:text="PROMOTIONS"
-                                android:textColor="@color/black"
+                                android:textColor="@color/white"
                                 android:textSize="15sp" />
                         </LinearLayout>
                     </ScrollView>
@@ -131,7 +133,18 @@
                     android:id="@+id/layoutVoucher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" >
+                    <TextView
+                        android:id="@+id/txtNotFound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:text="No Voucher available\nat the moment..."
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </FrameLayout>
         </RelativeLayout>
     </TabHost>
@@ -149,6 +162,7 @@
             android:layout_weight="2"
             android:background="@drawable/radius_left"
             android:onClick="clickToFinish"
+            android:textColor="@color/white"
             android:text="Back"
             android:textSize="10sp" />
 
@@ -158,10 +172,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="6"
-            android:background="@color/blueLight300"
+            android:background="@color/blueLight100"
             android:gravity="center"
             android:text="Brand Title"
-            android:textColor="@color/black"
+            android:textColor="@color/blueLight500"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -171,6 +185,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:background="@drawable/radius_right"
+            android:textColor="@color/white"
             android:onClick="clickToFinish"
             android:text="Unregister"
             android:textSize="10sp" />

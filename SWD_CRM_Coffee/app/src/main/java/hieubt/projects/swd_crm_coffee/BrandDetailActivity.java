@@ -28,6 +28,7 @@ import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiInterface;
 import hieubt.projects.swd_crm_coffee.ultilities.ItemGenerator;
+import hieubt.projects.swd_crm_coffee.ultilities.UnitConverter;
 import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +36,7 @@ import retrofit2.Response;
 
 public class BrandDetailActivity extends TabActivity {
 
-    private TextView txtTitle, txtProfile, txtExtend, txtDesc, txtAddresses;
+    private TextView txtTitle, txtProfile, txtExtend, txtDesc, txtAddresses, txtNotFound;
     private Button btnRegister;
     private LinearLayout mainLayout, layoutVoucher;
     private final ItemGenerator itemGenerator = new ItemGenerator(this);
@@ -52,6 +53,7 @@ public class BrandDetailActivity extends TabActivity {
         txtDesc = findViewById(R.id.txtDescription);
         txtAddresses = findViewById(R.id.txtAddresses);
         btnRegister = findViewById(R.id.btnRegister);
+        txtNotFound = findViewById(R.id.txtNotFound);
         mainLayout = findViewById(R.id.mainLayout);
         layoutVoucher = findViewById(R.id.layoutVoucher);
         final DBManager db = new DBManager(this);
@@ -69,17 +71,50 @@ public class BrandDetailActivity extends TabActivity {
                 createMembership(brandName, db.getCustomerCode());
             }
         });
-//"-Created Date :\n" + UnitConverter.getDateString(getIntent().getStringExtra("createdDate")) + "\n" +
+//
         txtTitle.setText(getIntent().getStringExtra("name"));
         txtProfile.setText(
-                "-Company :\n" + getIntent().getStringExtra("company") + "\n"
+                "-Created Date :\n"
+                        + (getIntent().getStringExtra("createdDate") == null ?
+                        "Unknown" : UnitConverter.getDateString(getIntent().getStringExtra("createdDate")))
+                        + "\n" +
+                        "-Company :\n"
+                        + (getIntent().getStringExtra("company") == null ?
+                        "Unknown" : getIntent().getStringExtra("company"))
+                        + "\n" +
+                        "-Contractor :\n"
+                        + (getIntent().getStringExtra("contract") == null ?
+                        "Unknown" : getIntent().getStringExtra("contract"))
         );
-        txtExtend.setText("-Website :\n" + getIntent().getStringExtra("website") + "\n" +
-                "-Contractor :\n" + getIntent().getStringExtra("contract") + "\n" +
-                "-Phone No.:\n" + getIntent().getStringExtra("phone") + "\n" +
-                "-Fax : \n" + getIntent().getStringExtra("fax"));
-        txtDesc.setText("-Description:\n" + getIntent().getStringExtra("description"));
+        txtExtend.setText(
+                "-Website :\n"
+                        + (getIntent().getStringExtra("website") == null ?
+                        "Unknown" : getIntent().getStringExtra("website"))
+                        + "\n" +
+                        "-Phone No.:\n"
+                        + (getIntent().getStringExtra("phone") == null ?
+                        "Unknown" : getIntent().getStringExtra("phone"))
+                        + "\n" +
+                        "-Fax : \n"
+                        + (getIntent().getStringExtra("fax") == null ?
+                        "Unknown" : getIntent().getStringExtra("fax"))
+        );
+        txtDesc.setText("-Description:\n"
+                + (getIntent().getStringExtra("description") == null ?
+                "No description available" : getIntent().getStringExtra("description")));
         txtAddresses.setText("There is no address for this brand");
+        addTab("Member's Status", R.id.layoutStatus);
+        addTab("Voucher", R.id.layoutVoucher);
+        for (int i = 0; i < getTabWidget().getTabCount(); i++) {
+            View v = getTabWidget().getChildTabViewAt(i);
+            v.setBackgroundResource(R.drawable.brand_tab_indicator);
+        }
+        getTabHost().setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                setTextColorSelectionForTab();
+            }
+        });
         if (checkRegistered(getIntent().getStringExtra("name"))) {
             ((TextView) findViewById(R.id.txtPromotion)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.txtPoint)).setVisibility(View.VISIBLE);
@@ -88,8 +123,6 @@ public class BrandDetailActivity extends TabActivity {
             getBrandPromotion();
             getVoucher();
             getPoint();
-            addTab("Member's Status", R.id.layoutStatus);
-            addTab("Voucher", R.id.layoutVoucher);
         } else {
             ((TextView) findViewById(R.id.txtPromotion)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.txtPoint)).setVisibility(View.GONE);
@@ -99,21 +132,47 @@ public class BrandDetailActivity extends TabActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTextColorSelectionForTab();
+    }
+
+    private void setTextColorSelectionForTab() {
+        for (int i = 0; i < getTabWidget().getChildCount(); i++) {
+            TextView tv = getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            tv.setTextColor(getResources().getColor(R.color.black));
+        }
+
+        TextView tv = getTabHost().getCurrentTabView().findViewById(android.R.id.title);
+        tv.setTextColor(getResources().getColor(R.color.white));
+    }
+
     private void getVoucher() {
         BigApiInterface service = BigApiClient.getClient().create(BigApiInterface.class);
         Call<VoucherResponse> call = service.getVoucherByMembershipCode(getIntent().getStringExtra("name"));
         call.enqueue(new Callback<VoucherResponse>() {
             @Override
             public void onResponse(Call<VoucherResponse> call, Response<VoucherResponse> response) {
-                List<Voucher> vouchers = response.body().getData();
-                for (Voucher voucher: vouchers) {
-                    itemGenerator.createPromotionRectangle(voucher.getCode(), voucher.getPromotionId(),mainLayout );
+                if (response.body() == null) {
+                    txtNotFound.setVisibility(View.VISIBLE);
+                } else {
+                    List<Voucher> vouchers = response.body().getData();
+                    if(vouchers.isEmpty()){
+                        txtNotFound.setVisibility(View.VISIBLE);
+                    }else{
+                        for (Voucher voucher : vouchers) {
+                            itemGenerator.createPromotionRectangle(voucher.getCode(), voucher.getPromotionId(), mainLayout);
+                        }
+                        txtNotFound.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<VoucherResponse> call, Throwable t) {
                 Toast.makeText(BrandDetailActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
+                txtNotFound.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -40,17 +40,17 @@ public class ItemGenerator {
         textView.setGravity(Gravity.CENTER);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         if (isRegistered == null) {
-            textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
+            textView.setBackgroundResource(R.drawable.shape_brand_registered_not);
             textView.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             switch (isRegistered) {
                 case "true":
-                    textView.setBackgroundResource(R.color.grey700);
-                    textView.setTextColor(context.getResources().getColor(R.color.white));
+                    textView.setBackgroundResource(R.drawable.shape_brand_registered);
+                    textView.setTextColor(context.getResources().getColor(R.color.black));
                     textView.setText(data.getBrandName() + "\n(Registered)");
                     break;
                 case "false":
-                    textView.setBackgroundDrawable(ColorGradient.getBlueGradient(context));
+                    textView.setBackgroundResource(R.drawable.shape_brand_registered_not);
                     textView.setTextColor(context.getResources().getColor(R.color.black));
                     break;
             }
@@ -66,8 +66,9 @@ public class ItemGenerator {
                 intent.putExtra("fax", data.getFax());
                 intent.putExtra("phone", data.getPhoneNumber());
                 intent.putExtra("description", data.getDescription());
-                intent.putExtra("createDate", data.getCreateDate());
+                intent.putExtra("createdDate", data.getCreateDate());
                 intent.putExtra("company", data.getCompanyName());
+                intent.putExtra("address", data.getAddress());
                 context.startActivity(intent);
             }
         });

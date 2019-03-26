@@ -68,14 +68,15 @@ public class HomeActivity extends AppCompatActivity {
                     data.setContactPerson("Hà Triệu Kim");
                     data.setPhoneNumber("099999999");
                     data.setFax("908788");
+                    data.setCreateDate("2018-05-10T14:55:00");
                     data.setDescription("The Good Coffee Chain System");
                     if (prev != null) {
-                        if(!prev.getBrandCode().equals(membership.getBrandCode())){
+                        if (!prev.getBrandCode().equals(membership.getBrandCode())) {
                             itemGenerator.createRectangleWithLabel(data, layoutHome, null);
                         }
                         prev = membership;
                     }
-                    if(prev == null){
+                    if (prev == null) {
                         itemGenerator.createRectangleWithLabel(data, layoutHome, null);
                         prev = membership;
                     }

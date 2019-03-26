@@ -59,7 +59,7 @@ public class PointActivity extends AppCompatActivity {
         txtResult = findViewById(R.id.txtResult);
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                (displayMetrics.widthPixels * 4) / 5,
+                (displayMetrics.widthPixels),
                 (displayMetrics.heightPixels * 4) / 5
         );
         cameraPreview.setLayoutParams(params);

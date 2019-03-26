@@ -10,7 +10,7 @@ import hieubt.projects.swd_crm_coffee.Model.Membership;
 public class UserSession {
     private static String id;
     private static List<Membership> userMembership = new ArrayList<>();
-    private static String qrCode = "";
+    private static String customerCode = "";
 
     @Contract(pure = true)
     public static String getId() {
@@ -29,11 +29,11 @@ public class UserSession {
         UserSession.userMembership = userMembership;
     }
 
-    public static String getQrCode() {
-        return qrCode;
+    public static String getCustomerCode() {
+        return customerCode;
     }
 
-    public static void setQrCode(String qrCode) {
-        UserSession.qrCode = qrCode;
+    public static void setCustomerCode(String customerCode) {
+        UserSession.customerCode = customerCode;
     }
 }

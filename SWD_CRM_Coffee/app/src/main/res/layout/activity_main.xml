@@ -35,11 +35,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Phone number"
+        android:maxLines="1"
+        android:inputType="text"
         android:paddingLeft="10sp"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Regist by phone number"
+        android:text="Register by phone number"
+        android:background="@drawable/shape_button"
         android:onClick="clickToRegisByPhone"/>
 
 </LinearLayout>

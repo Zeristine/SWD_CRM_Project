@@ -21,6 +21,8 @@ import hieubt.projects.swd_crm_coffee.Model.Mes;
 import hieubt.projects.swd_crm_coffee.Model.PostMembershipResponse;
 import hieubt.projects.swd_crm_coffee.Model.Promotion;
 import hieubt.projects.swd_crm_coffee.Model.PromotionResponse;
+import hieubt.projects.swd_crm_coffee.Model.Voucher;
+import hieubt.projects.swd_crm_coffee.Model.VoucherResponse;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BigApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.MembershipApiClient;
@@ -35,7 +37,7 @@ public class BrandDetailActivity extends TabActivity {
 
     private TextView txtTitle, txtProfile, txtExtend, txtDesc, txtAddresses;
     private Button btnRegister;
-    private LinearLayout mainLayout;
+    private LinearLayout mainLayout, layoutVoucher;
     private final ItemGenerator itemGenerator = new ItemGenerator(this);
     private final DBManager db = new DBManager(this);
     private final MembershipApiInterface membershipService = MembershipApiClient.getClient().create(MembershipApiInterface.class);
@@ -51,7 +53,7 @@ public class BrandDetailActivity extends TabActivity {
         txtAddresses = findViewById(R.id.txtAddresses);
         btnRegister = findViewById(R.id.btnRegister);
         mainLayout = findViewById(R.id.mainLayout);
-
+        layoutVoucher = findViewById(R.id.layoutVoucher);
         final DBManager db = new DBManager(this);
         Intent intent = getIntent();
         final String brandName = intent.getStringExtra("name");
@@ -61,11 +63,6 @@ public class BrandDetailActivity extends TabActivity {
             finish();
         }
         btnRegister.setText("Register");
-        if (checkRegistered(brandName)) {
-            btnRegister.setEnabled(false);
-        } else {
-            btnRegister.setEnabled(true);
-        }
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,18 +83,42 @@ public class BrandDetailActivity extends TabActivity {
         if (checkRegistered(getIntent().getStringExtra("name"))) {
             ((TextView) findViewById(R.id.txtPromotion)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.txtPoint)).setVisibility(View.VISIBLE);
+            btnRegister.setTextColor(getResources().getColor(R.color.blueLight500));
+            btnRegister.setEnabled(false);
             getBrandPromotion();
+            getVoucher();
             getPoint();
             addTab("Member's Status", R.id.layoutStatus);
             addTab("Voucher", R.id.layoutVoucher);
         } else {
             ((TextView) findViewById(R.id.txtPromotion)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.txtPoint)).setVisibility(View.GONE);
-            getTabHost().setVisibility(View.GONE);
+            getTabWidget().setVisibility(View.GONE);
+            btnRegister.setTextColor(getResources().getColor(R.color.black));
+            btnRegister.setEnabled(true);
         }
     }
 
-    public void getPoint() {
+    private void getVoucher() {
+        BigApiInterface service = BigApiClient.getClient().create(BigApiInterface.class);
+        Call<VoucherResponse> call = service.getVoucherByMembershipCode(getIntent().getStringExtra("name"));
+        call.enqueue(new Callback<VoucherResponse>() {
+            @Override
+            public void onResponse(Call<VoucherResponse> call, Response<VoucherResponse> response) {
+                List<Voucher> vouchers = response.body().getData();
+                for (Voucher voucher: vouchers) {
+                    itemGenerator.createPromotionRectangle(voucher.getCode(), voucher.getPromotionId(),mainLayout );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VoucherResponse> call, Throwable t) {
+                Toast.makeText(BrandDetailActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getPoint() {
         String customerCode = db.getCustomerCode();
         Call<AccountResponse> call = membershipService.getAccount(customerCode);
         call.enqueue(new Callback<AccountResponse>() {
@@ -105,7 +126,7 @@ public class BrandDetailActivity extends TabActivity {
             public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
                 List<Account> accounts = response.body().getData();
                 ((TextView) findViewById(R.id.txtPoint)).setText(
-                        accounts.isEmpty() ? "" : (accounts.get(0).getBalance() + "\nPOINT")
+                        accounts.isEmpty() ? "0\nPOINT" : (accounts.get(0).getBalance() + "\nPOINT")
                 );
             }
 
@@ -136,7 +157,7 @@ public class BrandDetailActivity extends TabActivity {
 
             @Override
             public void onFailure(Call<PromotionResponse> call, Throwable t) {
-                System.out.println("FAIL");
+                Toast.makeText(BrandDetailActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -212,6 +233,7 @@ public class BrandDetailActivity extends TabActivity {
     }
 
     public void createMembership(final String brandName, final String customerCode) {
+        btnRegister.setEnabled(false);
         MembershipToPost membershipToPost = new MembershipToPost(customerCode);
         membershipToPost.setBrandCode(brandName);
         Call<PostMembershipResponse> call1 = membershipService.postMemberShip(membershipToPost);
@@ -219,15 +241,33 @@ public class BrandDetailActivity extends TabActivity {
             @Override
             public void onResponse(Call<PostMembershipResponse> call, Response<PostMembershipResponse> response) {
                 int membershipId = response.body().getData().getId();
-                System.out.println("create membership ok, membershipID: " + membershipId);
                 createAccount(brandName, customerCode, membershipId);
+                Membership membership = new Membership();
+                membership.setBrandCode(brandName);
+                UserSession.getUserMembership().add(membership);
+                Toast.makeText(BrandDetailActivity.this,
+                        "create membership ok, membershipID: " + membershipId,
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BrandDetailActivity.this, BrandDetailActivity.class);
+                intent.putExtra("name", getIntent().getStringExtra("name"));
+                intent.putExtra("website", getIntent().getStringExtra("website"));
+                intent.putExtra("contract", getIntent().getStringExtra("contract"));
+                intent.putExtra("fax", getIntent().getStringExtra("fax"));
+                intent.putExtra("phone", getIntent().getStringExtra("phone"));
+                intent.putExtra("description", getIntent().getStringExtra("description"));
+                intent.putExtra("createDate", getIntent().getStringExtra("createDate"));
+                intent.putExtra("company", getIntent().getStringExtra("company"));
+                startActivity(intent);
+                finish();
             }
 
             @Override
             public void onFailure(Call<PostMembershipResponse> call, Throwable t) {
-                System.out.println("create membership fail");
+                btnRegister.setEnabled(true);
+                Toast.makeText(BrandDetailActivity.this,
+                        "Create membership fail",
+                        Toast.LENGTH_SHORT).show();
                 System.out.println(t.toString());
-
             }
         });
     }

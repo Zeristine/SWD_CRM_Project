@@ -30,6 +30,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:text="Log out"
+        android:background="@drawable/shape_button"
         android:onClick="clickToLogout"
         />
 

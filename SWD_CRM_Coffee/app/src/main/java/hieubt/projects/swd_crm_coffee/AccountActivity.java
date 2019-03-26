@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import java.util.ArrayList;
+
+import hieubt.projects.swd_crm_coffee.Model.Membership;
+import hieubt.projects.swd_crm_coffee.ultilities.UserSession;
+
 public class AccountActivity extends AppCompatActivity {
 
     @Override
@@ -14,8 +19,10 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     public void clickToLogout(View view) {
+        UserSession.setUserMembership(new ArrayList<Membership>());
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("isLogout", 1);
         startActivity(intent);
     }
 

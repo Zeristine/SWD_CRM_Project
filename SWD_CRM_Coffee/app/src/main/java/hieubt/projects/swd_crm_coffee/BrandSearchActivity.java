@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -48,7 +50,7 @@ public class BrandSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_brand_search);
         edtSearch = findViewById(R.id.edtSearch);
         mainLayout = findViewById(R.id.mainLayout);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         getAllBrands();
 
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -72,10 +74,12 @@ public class BrandSearchActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        //check regist
-        //create membership
-        //create account
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAllBrands();
     }
 
     private void getSearchResult(String value) {
@@ -84,7 +88,6 @@ public class BrandSearchActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Datum>> call, Response<List<Datum>> response) {
                 List<Datum> datas = response.body();
-                datas.add(new Datum("PASSIO"));
                 List<Membership> list = UserSession.getUserMembership();
                 if (datas != prevSearchList) {
                     mainLayout.removeAllViews();
@@ -114,6 +117,7 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     private void getAllBrands() {
+        mainLayout.removeAllViews();
         Call<List<Datum>> call = service.getAllBrand();
         call.enqueue(new Callback<List<Datum>>() {
             @Override
@@ -163,4 +167,7 @@ public class BrandSearchActivity extends AppCompatActivity {
         return false;
     }
 
+    public void clickToBack(View view) {
+        finish();
+    }
 }

@@ -33,14 +33,15 @@ public class MainActivity extends AppCompatActivity {
         txtUsername = findViewById(R.id.txtUsername);
         txtPassword = findViewById(R.id.txtPassword);
         txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
-
-        String phoneNumber = db.getPhoneNumber();
-        if (!phoneNumber.isEmpty()) {
-            Intent intent = new Intent(this, TabNavigationActivity.class);
-            startActivity(intent);
-            finish();
+        boolean isLogout = getIntent().getIntExtra("isLogout", 0) == 1;
+        if (!isLogout) {
+            String phoneNumber = db.getPhoneNumber();
+            if (!phoneNumber.isEmpty()) {
+                Intent intent = new Intent(this, TabNavigationActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
-
     }
 
     public void clickToNavigate(View view) {

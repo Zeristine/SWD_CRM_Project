@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".BrandSearchActivity">
 
     <ScrollView
@@ -13,11 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <EditText
-                android:id="@+id/edtSearch"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type Brands here"/>
+                android:layout_height="50sp"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                >
+                <ImageButton
+                    android:layout_width="40sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:onClick="clickToBack"
+                    android:background="@color/transparent"
+                    android:src="@drawable/icon_arrow_back_black"
+                    />
+                <EditText
+                    android:id="@+id/edtSearch"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:hint="Type Brands here"/>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/mainLayout"
                 android:layout_width="match_parent"

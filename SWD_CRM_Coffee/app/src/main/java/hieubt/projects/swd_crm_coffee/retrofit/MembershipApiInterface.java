@@ -34,4 +34,6 @@ public interface MembershipApiInterface {
 
     @PATCH("accounts/pay")
     Call<MesObject> payPoint(@Query("acc_code") String customerCode, @Query("amount") int amount);
+
+
 }

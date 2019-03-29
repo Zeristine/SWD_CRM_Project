@@ -13,14 +13,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 
-import hieubt.projects.swd_crm_coffee.Model.AccountToPost;
 import hieubt.projects.swd_crm_coffee.Model.Datum;
 import hieubt.projects.swd_crm_coffee.Model.Membership;
 import hieubt.projects.swd_crm_coffee.Model.MembershipResponse;
-import hieubt.projects.swd_crm_coffee.Model.MembershipToPost;
-import hieubt.projects.swd_crm_coffee.Model.Mes;
-import hieubt.projects.swd_crm_coffee.Model.MesObject;
-import hieubt.projects.swd_crm_coffee.Model.PostMembershipResponse;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiClient;
 import hieubt.projects.swd_crm_coffee.retrofit.BrandApiInterface;
 import hieubt.projects.swd_crm_coffee.retrofit.CustomerApiClient;
@@ -51,7 +46,6 @@ public class BrandSearchActivity extends AppCompatActivity {
         edtSearch = findViewById(R.id.edtSearch);
         mainLayout = findViewById(R.id.mainLayout);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        getAllBrands();
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,7 +73,10 @@ public class BrandSearchActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getAllBrands();
+        edtSearch.setText("");
+        if(mainLayout.getChildCount() == 0){
+            getAllBrands();
+        }
     }
 
     private void getSearchResult(String value) {
@@ -93,15 +90,15 @@ public class BrandSearchActivity extends AppCompatActivity {
                     mainLayout.removeAllViews();
                     for (Datum data : datas) {
                         boolean check = false;
-                        for(Membership membership : list){
-                            if(membership.getBrandCode().equals(data.getBrandName())){
+                        for (Membership membership : list) {
+                            if (membership.getBrandCode().equals(data.getBrandName())) {
                                 check = true;
                                 break;
                             }
                         }
-                        if(check){
+                        if (check) {
                             itemGenerator.createRectangleWithLabel(data, mainLayout, "true");
-                        }else{
+                        } else {
                             itemGenerator.createRectangleWithLabel(data, mainLayout, "false");
                         }
                     }
@@ -117,7 +114,6 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     private void getAllBrands() {
-        mainLayout.removeAllViews();
         Call<List<Datum>> call = service.getAllBrand();
         call.enqueue(new Callback<List<Datum>>() {
             @Override
@@ -125,17 +121,18 @@ public class BrandSearchActivity extends AppCompatActivity {
                 List<Datum> datas = response.body();
                 datas.add(new Datum("PASSIO"));
                 List<Membership> list = UserSession.getUserMembership();
+                mainLayout.removeAllViews();
                 for (Datum data : datas) {
                     boolean check = false;
-                    for(Membership membership : list){
-                        if(membership.getBrandCode().equals(data.getBrandName())){
+                    for (Membership membership : list) {
+                        if (membership.getBrandCode().equals(data.getBrandName())) {
                             check = true;
                             break;
                         }
                     }
-                    if(check){
+                    if (check) {
                         itemGenerator.createRectangleWithLabel(data, mainLayout, "true");
-                    }else{
+                    } else {
                         itemGenerator.createRectangleWithLabel(data, mainLayout, "false");
                     }
                 }
@@ -149,7 +146,7 @@ public class BrandSearchActivity extends AppCompatActivity {
     }
 
     //check regist or not. True for registed, False for not registed yet
-    public boolean checkRegisted(String brandName, String customerCode){
+    public boolean checkRegisted(String brandName, String customerCode) {
         Call<MembershipResponse> call = membershipService.getMemberShipByCode(customerCode);
         Response<MembershipResponse> response = null;
         try {

@@ -1,8 +1,7 @@
 package hieubt.projects.swd_crm_coffee;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -24,13 +23,13 @@ public class GetPointActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_point);
         String barcode = getIntent().getStringExtra("barcode");
-        if(barcode == null){
+        if (barcode == null) {
             Toast.makeText(this, "No Barcode Existed!", Toast.LENGTH_SHORT).show();
             finish();
         }
-        try{
+        try {
             addPoint(Integer.parseInt(barcode));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             finish();
         }
@@ -42,12 +41,13 @@ public class GetPointActivity extends AppCompatActivity {
         call.enqueue(new Callback<MesObject>() {
             @Override
             public void onResponse(Call<MesObject> call, Response<MesObject> response) {
-                System.out.println("add point ok");
+                Toast.makeText(GetPointActivity.this, "Add point completed", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override
             public void onFailure(Call<MesObject> call, Throwable t) {
-                System.out.println("add point fail");
+                Toast.makeText(GetPointActivity.this, "Add point faied", Toast.LENGTH_SHORT).show();
                 System.out.println(t.toString());
             }
         });

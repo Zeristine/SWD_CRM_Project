@@ -59,7 +59,7 @@ public class PointActivity extends AppCompatActivity {
         txtResult = findViewById(R.id.txtResult);
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                (displayMetrics.widthPixels * 4) / 5,
+                (displayMetrics.widthPixels),
                 (displayMetrics.heightPixels * 4) / 5
         );
         cameraPreview.setLayoutParams(params);
@@ -112,7 +112,7 @@ public class PointActivity extends AppCompatActivity {
                         public void run() {
                             Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(1000);
-                            txtResult.setText(qrcodes.valueAt(0).displayValue);
+//                            txtResult.setText(qrcodes.valueAt(0).displayValue);
                             Intent intent = new Intent(PointActivity.this, GetPointActivity.class);
                             intent.putExtra("barcode", qrcodes.valueAt(0).displayValue);
                             startActivity(intent);

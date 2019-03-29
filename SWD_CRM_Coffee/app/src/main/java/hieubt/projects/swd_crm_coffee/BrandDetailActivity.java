@@ -218,7 +218,7 @@ public class BrandDetailActivity extends TabActivity {
     private void getBrandPromotion() {
         //get brand promotion
         BigApiInterface bigService = BigApiClient.getClient().create(BigApiInterface.class);
-        Call<PromotionResponse> call1 = bigService.getPromotionById(1);
+        Call<PromotionResponse> call1 = bigService.getPromotionById(6);
         call1.enqueue(new Callback<PromotionResponse>() {
             @Override
             public void onResponse(Call<PromotionResponse> call, Response<PromotionResponse> response) {

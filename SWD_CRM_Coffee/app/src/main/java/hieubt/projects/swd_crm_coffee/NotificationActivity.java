@@ -18,7 +18,29 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+//        layoutNoti = findViewById(R.id.layoutNoti);
+//        txtNotFound = findViewById(R.id.txtNotFound);
+//        DBManager db = new DBManager(this);
+//        List<NotiDTO> listNoti = db.getListNoti();
+//        if (databaseList() == null) {
+//            txtNotFound.setVisibility(View.VISIBLE);
+//        } else {
+//            if (listNoti.size() > 0) {
+//                for (int i = 0; i < listNoti.size(); i++) {
+//                    createNotification(listNoti.get(i).getNotiTitle(), listNoti.get(i).getNotiBody());
+//                }
+//                txtNotFound.setVisibility(View.GONE);
+//            } else {
+//                txtNotFound.setVisibility(View.VISIBLE);
+//            }
+//        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         layoutNoti = findViewById(R.id.layoutNoti);
+        layoutNoti.removeAllViews();
         txtNotFound = findViewById(R.id.txtNotFound);
         DBManager db = new DBManager(this);
         List<NotiDTO> listNoti = db.getListNoti();
